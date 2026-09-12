@@ -1,0 +1,9 @@
+birand2026:
+  type: Article
+  author:
+    - Birand, First Name
+  title: "Paper Title"
+  date: 2026
+  parent:
+    type: Periodical
+    title: "Journal Name"
