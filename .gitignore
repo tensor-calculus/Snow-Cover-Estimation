@@ -1,0 +1,44 @@
+# Datasets and large rasters
+data/
+*.tif
+*.tiff
+*.npy
+*.SAFE/
+
+# Virtual environments & Python cache
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDE & Editor settings
+.vscode/
+.idea/
+
+# Local binaries & toolchains
+tectonic_bin/
+
+# Local archives & extracted backups
+archives/
+*.zip
+
+# LaTeX build intermediates
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
+# OS metadata
+.DS_Store
+Thumbs.db
+*.pth 
+report/ 
