@@ -1,0 +1,63 @@
+direction: down
+
+vars: {
+  d2-config: {
+    layout-engine: dagre
+    pad: 10
+  }
+}
+
+style: {
+  fill: "#ffffff"
+}
+
+s2_in: "Sentinel-2\nOptical" {
+  style: { fill: "#ffffff"; stroke: "#000000"; stroke-width: 2; border-radius: 4; font-size: 20; font-color: "#000000"; bold: false }
+}
+lis: "Let-It-Snow\n(LIS)" {
+  style: { fill: "#ffffff"; stroke: "#000000"; stroke-width: 2; border-radius: 4; font-size: 20; font-color: "#000000"; bold: false }
+}
+lbl_out: "10 m Snow\nLabels" {
+  style: { fill: "#ffffff"; stroke: "#000000"; stroke-width: 2; border-radius: 4; font-size: 20; font-color: "#000000"; bold: false }
+}
+
+s1w_in: "Winter\nSentinel-1" {
+  style: { fill: "#ffffff"; stroke: "#000000"; stroke-width: 2; border-radius: 4; font-size: 20; font-color: "#000000"; bold: false }
+}
+snap: "ESA SNAP\nCalibration" {
+  style: { fill: "#ffffff"; stroke: "#000000"; stroke-width: 2; border-radius: 4; font-size: 20; font-color: "#000000"; bold: false }
+}
+sar_out: "10 m Winter\nSAR" {
+  style: { fill: "#ffffff"; stroke: "#000000"; stroke-width: 2; border-radius: 4; font-size: 20; font-color: "#000000"; bold: false }
+}
+
+s1s_in: "Summer\nSentinel-1" {
+  style: { fill: "#ffffff"; stroke: "#000000"; stroke-width: 2; border-radius: 4; font-size: 20; font-color: "#000000"; bold: false }
+}
+mle: "Rayleigh\nMLE" {
+  style: { fill: "#ffffff"; stroke: "#000000"; stroke-width: 2; border-radius: 4; font-size: 20; font-color: "#000000"; bold: false }
+}
+ref_out: "Summer\nReference" {
+  style: { fill: "#ffffff"; stroke: "#000000"; stroke-width: 2; border-radius: 4; font-size: 20; font-color: "#000000"; bold: false }
+}
+
+dem_in: "Copernicus\n30 m DEM" {
+  style: { fill: "#ffffff"; stroke: "#000000"; stroke-width: 2; border-radius: 4; font-size: 20; font-color: "#000000"; bold: false }
+}
+align: "10 m Grid\nAlignment" {
+  style: { fill: "#ffffff"; stroke: "#000000"; stroke-width: 2; border-radius: 4; font-size: 20; font-color: "#000000"; bold: false }
+}
+dem_out: "Elevation\n& Slope" {
+  style: { fill: "#ffffff"; stroke: "#000000"; stroke-width: 2; border-radius: 4; font-size: 20; font-color: "#000000"; bold: false }
+}
+
+s2_in -> lis: { style.stroke: "#000000"; style.stroke-width: 2 }
+lis -> lbl_out: { style.stroke: "#000000"; style.stroke-width: 2 }
+s1w_in -> snap: { style.stroke: "#000000"; style.stroke-width: 2 }
+snap -> sar_out: { style.stroke: "#000000"; style.stroke-width: 2 }
+s1s_in -> mle: { style.stroke: "#000000"; style.stroke-width: 2 }
+mle -> ref_out: { style.stroke: "#000000"; style.stroke-width: 2 }
+dem_in -> align: { style.stroke: "#000000"; style.stroke-width: 2 }
+align -> dem_out: { style.stroke: "#000000"; style.stroke-width: 2 }
+dem_in -> lis: { style.stroke: "#000000"; style.stroke-dash: 4; style.stroke-width: 2 }
+dem_in -> snap: { style.stroke: "#000000"; style.stroke-dash: 4; style.stroke-width: 2 }
