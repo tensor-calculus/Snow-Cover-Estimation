@@ -1,0 +1,66 @@
+direction: right
+
+vars: {
+  d2-config: {
+    layout-engine: dagre
+    pad: 10
+  }
+}
+
+style: {
+  fill: "#ffffff"
+}
+
+train: "1. Training Phase (Clear-Sky Days)" {
+  style: {
+    fill: "#ffffff"
+    stroke: "#000000"
+    stroke-width: 2
+    border-radius: 4
+    font-size: 21
+    font-color: "#000000"
+    bold: true
+  }
+
+  s2: "Sentinel-2\n(Optical)" {
+    style: { fill: "#ffffff"; stroke: "#000000"; stroke-width: 2; border-radius: 4; font-size: 20; font-color: "#000000"; bold: false }
+  }
+  lis: "Snow Labels\n(LIS)" {
+    style: { fill: "#ffffff"; stroke: "#000000"; stroke-width: 2; border-radius: 4; font-size: 20; font-color: "#000000"; bold: false }
+  }
+  s1: "Sentinel-1\n(SAR)" {
+    style: { fill: "#ffffff"; stroke: "#000000"; stroke-width: 2; border-radius: 4; font-size: 20; font-color: "#000000"; bold: false }
+  }
+  unet: "U-Net Model" {
+    style: { fill: "#ffffff"; stroke: "#000000"; stroke-width: 2; border-radius: 4; font-size: 20; font-color: "#000000"; bold: false }
+  }
+
+  s2 -> lis: { style.stroke: "#000000"; style.stroke-width: 2 }
+  s1 -> unet: "Input" { style.stroke: "#000000"; style.stroke-width: 2; style.font-size: 18; style.font-color: "#000000"; style.bold: false }
+  lis -> unet: "Labels" { style.stroke: "#000000"; style.stroke-dash: 4; style.stroke-width: 2; style.font-size: 18; style.font-color: "#000000"; style.bold: false }
+}
+
+test: "2. Inference Phase (All-Weather / Cloudy)" {
+  style: {
+    fill: "#ffffff"
+    stroke: "#000000"
+    stroke-width: 2
+    border-radius: 4
+    font-size: 21
+    font-color: "#000000"
+    bold: true
+  }
+
+  s1_test: "Sentinel-1\n(SAR)" {
+    style: { fill: "#ffffff"; stroke: "#000000"; stroke-width: 2; border-radius: 4; font-size: 20; font-color: "#000000"; bold: false }
+  }
+  unet_trained: "Trained U-Net" {
+    style: { fill: "#ffffff"; stroke: "#000000"; stroke-width: 2; border-radius: 4; font-size: 20; font-color: "#000000"; bold: false }
+  }
+  out: "Snow Map" {
+    style: { fill: "#ffffff"; stroke: "#000000"; stroke-width: 2; border-radius: 4; font-size: 20; font-color: "#000000"; bold: false }
+  }
+
+  s1_test -> unet_trained: { style.stroke: "#000000"; style.stroke-width: 2 }
+  unet_trained -> out: { style.stroke: "#000000"; style.stroke-width: 2 }
+}

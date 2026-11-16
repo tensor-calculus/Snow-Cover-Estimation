@@ -1,0 +1,37 @@
+direction: right
+
+vars: {
+  d2-config: {
+    layout-engine: dagre
+    pad: 10
+  }
+}
+
+style: {
+  fill: "#ffffff"
+}
+
+cband: "C-Band SAR\n(Winter + MLE Ref)" {
+  style: { fill: "#ffffff"; stroke: "#000000"; stroke-width: 2; border-radius: 4; font-size: 20; font-color: "#000000"; bold: false }
+}
+
+sband: "S-Band SAR\n(Winter + MLE Ref)" {
+  style: { fill: "#ffffff"; stroke: "#000000"; stroke-width: 2; border-radius: 4; font-size: 20; font-color: "#000000"; bold: false }
+}
+
+dem: "Copernicus DEM\n(Elevation & Slope)" {
+  style: { fill: "#ffffff"; stroke: "#000000"; stroke-width: 2; border-radius: 4; font-size: 20; font-color: "#000000"; bold: false }
+}
+
+fusion: "Multi-Frequency\nFusion U-Net" {
+  style: { fill: "#ffffff"; stroke: "#000000"; stroke-width: 2; border-radius: 4; font-size: 20; font-color: "#000000"; bold: false }
+}
+
+out: "Snow Cover\nMap" {
+  style: { fill: "#ffffff"; stroke: "#000000"; stroke-width: 2; border-radius: 4; font-size: 20; font-color: "#000000"; bold: false }
+}
+
+cband -> fusion: { style.stroke: "#000000"; style.stroke-width: 2 }
+sband -> fusion: { style.stroke: "#000000"; style.stroke-width: 2 }
+dem -> fusion: { style.stroke: "#000000"; style.stroke-width: 2 }
+fusion -> out: { style.stroke: "#000000"; style.stroke-width: 2 }

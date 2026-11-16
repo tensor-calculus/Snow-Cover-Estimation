@@ -1,0 +1,455 @@
+% =====================================================================
+% Poster template, DIN A0 portrait.
+% =====================================================================
+\documentclass[final,svgnames,english]{beamer}
+\usepackage[english]{babel}
+
+\usepackage[orientation=portrait,size=a0,scale=1.4]{beamerposter}
+\usetheme{InriaPoster}
+
+% Headline template without French flag or Inria logo
+\setbeamertemplate{headline}{
+  \leavevmode
+  \begin{beamercolorbox}[wd=\linewidth]{upper separation line head}
+    \vskip7.4ex
+  \end{beamercolorbox}
+  \begin{columns}[b]
+    \begin{column}{.02\linewidth}
+    \end{column}
+    \begin{column}{.96\linewidth}
+      \raggedright
+      \usebeamercolor{title in headline}{\color{fg}\textbf{\LARGE{\inserttitle}}\\[0.92ex]}
+      \usebeamercolor{author in headline}{\color{fg}\large{\insertauthor}\\[0.29ex]}
+      \usebeamercolor{institute in headline}{\color{fg}\normalsize{\insertinstitute}\\[0.74ex]}
+    \end{column}
+    \begin{column}{.02\linewidth}
+    \end{column}
+  \end{columns}
+  \begin{beamercolorbox}[wd=\linewidth]{lower separation line head}
+    \vskip2ex
+  \end{beamercolorbox}
+}
+
+\usepackage{amsmath,amsthm, amssymb, latexsym}
+\usepackage{mathspec}
+\setmainfont{Inria Sans}[Scale=MatchLowercase, Kerning=Uppercase]
+\setsansfont{Inria Sans}[Scale=MatchLowercase, Kerning=Uppercase]
+\setmonofont{Fira Code}[Scale=0.74, Kerning=Uppercase]
+%\setmathfont(Digits,Latin,Greek,Symbols)[Scale=MatchLowercase]{Inria Serif}
+\setmathrm[Scale=MatchLowercase]{Inria Sans}
+%\usepackage{mathastext}
+
+% \boldmath %math en gras
+
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{qrcode}
+\usepackage{adjustbox}
+\usepackage{xspace}
+\usepackage{nicefrac}
+\usepackage{multiobjective}
+\usepackage{fontawesome5}
+\usepackage{listings}
+\lstset{basicstyle=\small\ttfamily,columns=fullflexible,keepspaces=true}
+\urlstyle{tt}
+\makeatletter
+\providecommand{\@ptsize}{0}
+\makeatother
+\usepackage{setspace}
+
+\usepackage{tikz}
+\usetikzlibrary{calc, backgrounds, arrows, shapes}
+\usepackage{smartdiagram}
+\usepackage{lipsum}
+
+\usepackage[backend=bibtex, style=numeric, autocite=superscript, defernumbers=true, natbib=true]{biblatex}
+\usepackage{csquotes}
+\usepackage{tikz}           % vector diagrams in native document font
+\usetikzlibrary{arrows.meta,positioning,fit,calc}
+
+\tikzset{
+  tbox/.style={draw=inria-2024-bleu-nuit, line width=1.5pt, rounded corners=6pt, fill=white, align=center, font=\normalsize, inner sep=6pt, minimum height=2.2cm},
+  tbox_optical/.style={tbox, draw=inria-2024-bleu-azur, fill=inria-2024-bleu-azur!10},
+  tbox_sar/.style={tbox, draw=inria-2024-bleu-nuit, fill=inria-2024-bleu-nuit!8},
+  tbox_model/.style={tbox, draw=inria-2024-violet, fill=inria-2024-violet!10},
+  tbox_output/.style={tbox, draw=inria-2024-vert-tendre, fill=inria-2024-vert-tendre!14},
+  tbox_loss/.style={tbox, draw=inria-rouge, fill=inria-rouge!10},
+  tgroup/.style={draw=inria-2024-gris-bleu!60, line width=1.5pt, rounded corners=8pt, fill=inria-2024-gris-bleu!4, inner sep=14pt},
+  tarrow/.style={-{Stealth[length=10pt,width=7pt]}, line width=2pt, draw=inria-2024-bleu-nuit},
+  tdash/.style={-{Stealth[length=10pt,width=7pt]}, line width=2pt, dashed, draw=inria-2024-framboise},
+  tlbl/.style={font=\small\itshape, fill=white, inner sep=2pt}
+}
+
+\makeatletter
+\RequireBibliographyStyle{numeric}
+%\DeclareFieldFormat{labelnumberwidth}{\mkbibbrackets{#1}}
+\DeclareFieldFormat{labelnumberwidth}{#1.}
+\makeatother
+
+\DeclareFieldFormat{hal}{%
+  \mkbibacro{hal}\addcolon\space
+  \ifhyperref
+  {\href{https://hal.archives-ouvertes.fr/#1}{\nolinkurl{#1}}}
+{\nolinkurl{#1}}}
+
+\DeclareFieldAlias{eprint:hal}{hal}
+\DeclareFieldAlias{eprint:HAL}{eprint:hal}
+
+\renewbibmacro*{eprint}{%
+  \printfield{hal}%
+  \newunit\newblock
+  \iffieldundef{eprinttype}
+  {\printfield{eprint}}
+{\printfield[eprint:\strfield{eprinttype}]{eprint}}}
+
+\DeclareFieldFormat{url}{%
+  \mkbibacro{doi}\addcolon\space
+  \ifhyperref
+  {\href{https://doi.org/#1}{\nolinkurl{#1}}}
+{\nolinkurl{#1}}}
+
+\DeclareFieldFormat{url}{url\addcolon\space\url{#1}}
+
+\renewbibmacro*{url+urldate}{%
+  \ifthenelse{\iffieldundef{url}\OR\NOT\iffieldundef{doi}}
+  {}
+  {\iffieldundef{urlyear}
+    {}
+    {%\bibstring{retrieved}%
+      \setunit{\addspace}%
+      %\printurldate
+      %\setunit{\urldatecomma}%
+      %\bibstring{from}%
+      %\setunit{\addspace}
+    }%
+\iffieldundef{url}{}{\printfield{url}\renewcommand*{\finentrypunct}{\relax}}}}
+
+% Update self.bib with your own publication information
+% DO NOT change the "this-paper" key inside self.bib.
+\addbibresource{self.bib} % Bibliography file
+\addbibresource{references.bib}
+
+% Avoid that our paper shows up in bibliography
+\DeclareBibliographyCategory{thispapercat}
+\addtocategory{thispapercat}{this-paper}
+\AtBeginBibliography{\onehalfspacing}
+
+
+
+
+% ---------------------------------------------------------------------
+% Highlight boxes
+% ---------------------------------------------------------------------
+\newtcolorbox{callout}{%
+  enhanced, sharp corners, colback=inria-2024-rouge!11, width=\linewidth,
+  colframe=inria-2024-rouge, boxrule=0pt, leftrule=7.4pt,
+  left=11pt, right=5pt, top=9pt, bottom=9pt,
+before skip=11pt, after skip=5pt}
+
+\newtcolorbox{takeaway}{%
+  enhanced, sharp corners, colback=inria-2024-vert-tendre!11, width=\linewidth,
+  colframe=inria-2024-vert-tendre, boxrule=0pt, leftrule=7.4pt,
+  left=11pt, right=5pt, top=9pt, bottom=9pt,
+before skip=11pt, after skip=5pt}
+
+\newtcolorbox{inform}{%
+  enhanced, sharp corners, colback=inria-2024-gris-bleu!11, width=\linewidth,
+  colframe=inria-2024-gris-bleu, boxrule=0pt, leftrule=7.4pt,
+  left=11pt, right=5pt, top=9pt, bottom=9pt,
+before skip=11pt, after skip=5pt}
+
+% block for the main findings of the paper
+\newtcolorbox{findingblock}[2]{%
+  enhanced, sharp corners, colback=inria-2024-#2!1, width=\linewidth,
+  colframe=inria-2024-#2, boxrule=0.47pt, leftrule=7.4pt,title={#1}, detach title,
+  before upper={\textbf{\tcbtitle}\ },
+  coltitle=inria-2024-#2,
+  left=11pt, right=5pt, top=9pt, bottom=9pt,
+before skip=5pt, after skip=5pt}
+
+\title{On the Complementarity of S-band and C-band SAR Images for Snow Cover Segmentation}
+\author{R. Virinchi 254161009 \url{r.virinchi@iitg.ac.in}}
+\institute[]{Indian Institute of Technology Guwahati}
+
+\begin{document}
+\begin{frame}[fragile]{}
+  \vspace{-2em}
+  \begin{columns}[T]
+    % Forcing left margin
+    \begin{column}{0.01\linewidth}
+    \end{column}
+
+    % Content
+    \begin{column}{0.98\linewidth}
+      % TL;DR section: continuous gradient line spanning the whole page above the sentences
+      \noindent\begin{tikzpicture}
+        \shade[inria degrade, rounded corners=2pt] (0,0) rectangle (\linewidth, \filetheight);
+      \end{tikzpicture}\par
+      \vspace{0.4ex}
+      \begin{columns}[t]
+        \begin{column}{0.32\linewidth}
+          \begin{plainblock}{}
+            \large Snow cover estimation has always been a difficult problem to solve...\raggedright
+          \end{plainblock}
+        \end{column}%\hfill
+        \begin{column}{0.32\linewidth}
+          \begin{plainblock}{}
+            \large \ldots First there were optical based methods, \tcblower \large \textbf{but they didn't work when there were clouds!}
+          \end{plainblock}
+        \end{column}%\hfill
+        \begin{column}{0.32\linewidth}
+          \begin{plainblock}{}
+            \large Hence SAR based methods were created... \textcolor{inria-rouge}{\textbf{This work proposes one such method!}}
+          \end{plainblock}
+        \end{column}
+      \end{columns}
+      % Main content
+      \begin{columns}[T]
+        \begin{column}{.485\linewidth}
+          \begin{inriastartblock}{Context}
+            \begin{itemize}
+              \item Nothing can beat snow cover estimated using optical images, when the sky is clear.
+              \item But, sky is not always clear. During winter $>50\%$ of sky over a region can be filled with clouds.
+              \item Synthetic Aperture Radar is an active remote sensing technique that can penetrate clouds!
+              \item But it cannot identify snow on its own.
+              \item Enter Deep Learning - We can teach it to identify snow!
+            \end{itemize}
+        \end{inriastartblock}
+        \begin{inriablock}{Weakly Supervised Framework}
+            \begin{figure}[!htbp]
+              \centering
+              \begin{tikzpicture}[node distance=0.85cm and 1.2cm]
+                % -------------------------------------------------------------
+                % 1. Training Phase (Clear-Sky Days)
+                % -------------------------------------------------------------
+                % Row 1: Optical weak label branch
+                \node[tbox_optical, text width=6.6cm, minimum height=1.9cm] (s2) {\textbf{Sentinel-2}\\[2pt]\small(Optical Image)};
+                \node[tbox_optical, text width=6.6cm, minimum height=1.9cm, right=1.2cm of s2] (lis) {\textbf{Snow Labels}\\[2pt]\small(Let-It-Snow)};
+                \draw[tarrow] (s2) -- (lis);
+
+                % Row 2: SAR forward pass branch
+                \node[tbox_sar, text width=6.6cm, minimum height=1.9cm, below=0.85cm of s2] (s1) {\textbf{Sentinel-1}\\[2pt]\small(SAR Backscatter)};
+                \node[tbox_model, text width=6.6cm, minimum height=1.9cm, right=1.2cm of s1] (unet) {\textbf{U-Net Model}\\[2pt]\small(Segmentation)};
+                \node[tbox_output, text width=6.6cm, minimum height=1.9cm, right=1.2cm of unet] (pred) {\textbf{Predicted}\\[2pt]\textbf{Snow Map}};
+                \node[tbox_loss, text width=6.6cm, minimum height=1.9cm, right=1.2cm of pred] (loss) {\textbf{Loss Function}\\[2pt]\small(Cross-Entropy)};
+
+                \draw[tarrow] (s1) -- node[above, font=\small\itshape] {Input} (unet);
+                \draw[tarrow] (unet) -- (pred);
+                \draw[tarrow] (pred) -- (loss);
+
+                % Connect LIS weak labels to Loss Calculation (supervision target)
+                \draw[tdash] (lis.east) -| node[pos=0.35, above, font=\small\bfseries, text=inria-2024-framboise] {Weak Labels} (loss.north);
+
+                % Training loop feedback: backpropagation to U-Net
+                \coordinate (loopb) at ($(loss.south)+(0,-0.65cm)$);
+                \draw[tarrow, draw=inria-rouge] (loss.south) -- (loopb) -- (loopb -| unet.south) node[midway, below=2pt, font=\small\bfseries, text=inria-rouge] {Backpropagation (Training Loop)} -- (unet.south);
+
+                % Group box for Training Phase (fully enclosing feedback loop and label)
+                \node[tgroup, fit=(s2)(s1)(lis)(unet)(pred)(loss)(loopb), inner xsep=12pt, inner ysep=8pt, label={[font=\normalsize\bfseries, text=inria-2024-bleu-nuit]above:\textbf{1. Training Phase (Clear-Sky Days)}}] (gtrain) {};
+
+                % -------------------------------------------------------------
+                % 2. Inference Phase (All-Weather / Cloudy)
+                % -------------------------------------------------------------
+                \node[tbox_model, text width=7.2cm, minimum height=1.9cm, below=1.2cm of gtrain.south] (unett) {\textbf{Trained U-Net}\\[2pt]\small(Frozen Weights)};
+                \node[tbox_sar, text width=7.2cm, minimum height=1.9cm, left=1.4cm of unett] (s1t) {\textbf{Sentinel-1}\\[2pt]\small(Cloudy / All-Weather)};
+                \node[tbox_output, text width=7.2cm, minimum height=1.9cm, right=1.4cm of unett] (out) {\textbf{Snow Cover Map}\\[2pt]\small(Segmented Output)};
+
+                \draw[tarrow] (s1t) -- node[above, font=\small\itshape] {Input} (unett);
+                \draw[tarrow] (unett) -- (out);
+
+                \node[tgroup, fit=(s1t)(unett)(out), inner xsep=12pt, inner ysep=8pt, label={[font=\normalsize\bfseries, text=inria-2024-bleu-nuit]above:\textbf{2. Inference Phase (All-Weather / Cloudy)}}] (ginf) {};
+              \end{tikzpicture}
+              \vspace{0.2em}
+              \caption{Weakly Supervised Training and Inference Flow Diagram}
+              \label{fig:concept}
+            \end{figure}
+          \end{inriablock}
+
+          \begin{inriablock}{Defining the Objectives:}
+            \begin{enumerate}
+              \item Build reusable satellite image preprocessing pipeline. ($70\%$ of the work 'cause satellite images contain too much information!)
+              \item Generate labels needed to train the model using optical images (hence weakly supervised).
+              \item Train model on C-band and get elevation wise metrics.
+              \item Train model on S-band and get elevation wise metrics.
+              \item Prove they are complementary and device a novel approach to combine them!
+              \item Use the new model to outperform previous best-performing model of \citet{briand2026weakly}.
+              \item Package everything into a GUI for demonstration.
+            \end{enumerate}
+            % \begin{takeaway}
+              
+            % \end{takeaway}
+          \end{inriablock}
+
+          \begin{inriablock}{Laying out the Timeline}
+            \begin{itemize}
+                \item Result by end of February.
+                  \begin{itemize}
+                    \item Either positive or negative result. Both are meaningful!
+                  \end{itemize}
+                \item Submit paper by end of March.
+                \item Create GUI by end of April.
+                  \begin{itemize}
+                    \item Time taken $\propto$ no.of external dependencies.
+                    \item Because they have a tendency to not cooperate.
+                  \end{itemize}
+              \end{itemize}
+          \end{inriablock}
+
+          % % a simple block to put context
+          % \begin{plainblock}{}
+          %   \centering
+          %   %\begin{adjustbox}{max width=0.83\textwidth}
+          %   \input{sample-figs/tikz-sample-figure}
+          %   %\end{adjustbox}
+          % \end{plainblock}
+
+          \begin{inriablock}{Poster Design Principles}
+            \begin{itemize}
+              \item \textbf{Minimalist:} less is more; focus on the readability of the content.
+              \item \textbf{Sophisticated:} clean styling and visual balance.
+              \item \textbf{Structured:} organized blocks with clear visual hierarchy.
+                \begin{itemize}
+                  \item Highlight key takeaways and quantitative metrics.
+                  \item Maintain high contrast and legible typography.
+                \end{itemize}
+            \end{itemize}
+          \end{inriablock}
+
+          \begin{inriablock}{The (infinite) NLP loop}
+            %\vspace{-2ex}
+            \begin{columns}[T]
+              \begin{column}{0.5\textwidth}
+                \begin{itemize}
+                  \item Be concise.
+                    \begin{itemize}
+                      \item Avoid long narrative text spans,
+                      \item instead, itemize or enumerate.
+                    \end{itemize}
+                  \item Be precise.
+                  \item Be illustrative.
+                  \item Be self-contained.
+                  \item Ensure readability at a distance.
+                  \item Stick to a consistent color palette.
+                    \begin{itemize}
+                      \item you earn extra points if your plots also use those colors!
+                    \end{itemize}
+                \end{itemize}
+              \end{column}
+              \begin{column}{0.45\textwidth}
+                \centering
+                \input{sample-figs/tikz-loop.tex}
+              \end{column}
+            \end{columns}
+          \end{inriablock}
+
+          % You can move this block around to fit your poster content
+          \begin{plainblock}{}
+            \begin{columns}[c]
+              \begin{column}{0.092\textwidth}
+                \qrcode[height=\textwidth,hyperlink]{https://github.com/tensor-calculus/Snow-Cover-Estimation}
+              \end{column}
+              \begin{column}{0.9\textwidth}%
+                {\linespread{0.83}\footnotesize\fullcite{this-paper}\\[-1.28ex]
+                \textbf{Code:} \url{https://github.com/tensor-calculus/Snow-Cover-Estimation}}
+              \end{column}
+            \end{columns}
+          \end{plainblock}
+        \end{column}
+
+        % Column 2
+        \begin{column}{.485\linewidth}
+          \begin{plainblock}{}
+            \begin{findingblock}{Finding 1. Using \texttt{findingblock} to draw attention.}{framboise}
+
+              You can use \texttt{findingblock} to draw attention to the main findings of the paper.
+                \begin{lstlisting}
+\begin{findingblock}{<Title of finding>}{<color>}
+    <text of the finding>
+\end{findingblock}
+                \end{lstlisting}
+              \begin{itemize}
+                \item \textbf{\texttt{color}}: rouge, framboise, violet, bleu-nuit, bleu-canard, bleu-azur, bleu-vert, gris-bleu, cactus, vert-tendre, jaune, orange, and sable.
+                \item \textbf{\texttt{Title of finding}}: title of the finding, can be empty.
+                \item \textbf{Note:} This is a nice addition to the poster template.
+              \end{itemize}
+            \end{findingblock}
+
+            \begin{findingblock}{Finding 2. This is actually cool.}{violet}
+              \begin{columns}[T]
+                \begin{column}{0.6\textwidth}
+                  \begin{itemize}
+                    \item \lipsum[1][1]
+                    \item \lipsum[1][2]
+                    \item \lipsum[1][3]
+                    \item \lipsum[1][4]
+                  \end{itemize}
+                \end{column}
+                \begin{column}{0.38\textwidth}
+                  \input{sample-figs/tikz-findings-venn.tex}
+                \end{column}
+              \end{columns}
+            \end{findingblock}
+
+            \begin{findingblock}{Finding 3. We have other blocks.}{framboise}
+              \begin{takeaway}
+                \texttt{takeaway}: green block for good news. \lipsum[1][1-2]
+              \end{takeaway}
+
+              \begin{callout}
+                \texttt{callout}: a red block to draw attention. \lipsum[1][1-2]
+              \end{callout}
+
+              \begin{inform}
+                \texttt{inform}: to frame some important information or definition. \lipsum[1][1-2]
+              \end{inform}
+            \end{findingblock}
+
+            \begin{findingblock}{Finding 4. Columns inside your findings are your friend.}{violet}
+              \begin{columns}[T]
+                \begin{column}{0.47\textwidth}
+                  \begin{itemize}
+                    \item You can organize your content as (nested) columns.
+                      \begin{itemize}
+                        \item helps to have narrative next to visual elements,
+                        \item it can be fun.
+                      \end{itemize}
+                  \end{itemize}
+                \end{column}
+                \begin{column}{0.47\textwidth}
+                  \centering
+                  \input{sample-figs/tikz-hepta}
+                \end{column}
+              \end{columns}
+            \end{findingblock}
+          \end{plainblock}
+
+          \begin{inriafinalblock}{Final remarks}
+            \begin{itemize}
+              \item Use \verb|\begin{inriafinalblock}{header}...\end{inriafinalblock}| to end your poster.
+              \item \textbf{Project repository:}
+                \begin{itemize}
+                  \item \url{https://github.com/tensor-calculus/Snow-Cover-Estimation}
+                \end{itemize}
+              \item \textbf{Structure \& Clarity:}
+                \begin{itemize}
+                  \item Keep text concise and prefer visual figures and diagrams.
+                  \item High-contrast blocks ensure readability from a distance.
+                \end{itemize}
+            \end{itemize}
+          \end{inriafinalblock}
+          % In general, it does not make sense to include a bibliography, but here you have it in case you need it.
+          \begin{plainblock}{\small References}
+            %%\renewcommand*{\bibfont}{\footnotesize}
+            \setlength{\bibitemsep}{0.29em}
+            \printbibliography[notcategory=thispapercat]
+          \end{plainblock}
+        \end{column}
+      \end{columns}
+    \end{column}
+
+    % right margin
+    \begin{column}{0.01\linewidth}
+    \end{column}
+  \end{columns}
+\end{frame}
+\end{document}
