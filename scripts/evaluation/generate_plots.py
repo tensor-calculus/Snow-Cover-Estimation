@@ -71,11 +71,11 @@ def plot_snowline_domain_shift(data_dir):
 
     bins = np.linspace(2500, 7000, 55)
     ax.hist(elev_train_snow, bins=bins, density=True, alpha=0.45, color='#1E88E5',
-            label='Train Region (patch7–11, Median: 5,169 m)')
+            label='Train Region (Median: 5,169 m)')
     ax.hist(elev_val_snow, bins=bins, density=True, histtype='step', linewidth=2.2, color='#0D47A1',
-            label='Val Region (patch12, Median: 5,180 m)')
+            label='Val Region (Median: 5,180 m)')
     ax.hist(elev_test_snow, bins=bins, density=True, alpha=0.50, color='#E53935',
-            label='Test Region (patch_test, Median: 4,298 m)')
+            label='Unseen Test Region (Median: 4,298 m)')
 
     # Draw median vertical lines indicating regional snowlines
     ax.plot([5169, 5169], [0, 0.00118], color='#1565C0', linestyle='--', linewidth=2.2)
@@ -90,9 +90,9 @@ def plot_snowline_domain_shift(data_dir):
 
     # Place legend completely outside lower center so no text or box ever touches the distribution peaks
     legend_handles = [
-        Patch(facecolor='#1E88E5', alpha=0.45, label='Train Region (patch7–11, Median: 5,169 m)'),
-        plt.Line2D([0], [0], color='#0D47A1', lw=2.2, label='Val Region (patch12, Median: 5,180 m)'),
-        Patch(facecolor='#E53935', alpha=0.50, label='Test Region (patch_test, Median: 4,298 m)'),
+        Patch(facecolor='#1E88E5', alpha=0.45, label='Train Region (Median: 5,169 m)'),
+        plt.Line2D([0], [0], color='#0D47A1', lw=2.2, label='Val Region (Median: 5,180 m)'),
+        Patch(facecolor='#E53935', alpha=0.50, label='Unseen Test Region (Median: 4,298 m)'),
         plt.Line2D([0], [0], color='#424242', linestyle='--', lw=2.0, label='Regional Medians (871 m Snowline Shift)'),
     ]
     fig.legend(handles=legend_handles, loc='outside lower center', ncol=2, fontsize=10.0, frameon=True)
@@ -146,13 +146,13 @@ def plot_elevation_performance():
 def plot_scene_cloud_and_snow_stats(data_dir):
     """Plot 3: Cloud obscuration vs. valid snow percentage across all winter scenes."""
     scenes = [
-        ("patch7\n(09 Dec)", os.path.join(data_dir, "patch7", "training_labels.tif")),
-        ("patch8\n(21 Dec)", os.path.join(data_dir, "patch8", "training_labels.tif")),
-        ("patch9\n(02 Jan)", os.path.join(data_dir, "patch9", "training_labels.tif")),
-        ("patch10\n(14 Jan)", os.path.join(data_dir, "patch10", "training_labels.tif")),
-        ("patch11\n(26 Jan)", os.path.join(data_dir, "patch11", "training_labels.tif")),
-        ("patch12\n(19 Feb Val)", os.path.join(data_dir, "patch12", "training_labels.tif")),
-        ("patch_test\n(21 Jan Test)", os.path.join(data_dir, "patch_test", "winter_img", "training_labels.tif")),
+        ("Train 1\n(09 Dec)", os.path.join(data_dir, "patch7", "training_labels.tif")),
+        ("Train 2\n(21 Dec)", os.path.join(data_dir, "patch8", "training_labels.tif")),
+        ("Train 3\n(02 Jan)", os.path.join(data_dir, "patch9", "training_labels.tif")),
+        ("Train 4\n(14 Jan)", os.path.join(data_dir, "patch10", "training_labels.tif")),
+        ("Train 5\n(26 Jan)", os.path.join(data_dir, "patch11", "training_labels.tif")),
+        ("Val\n(19 Feb)", os.path.join(data_dir, "patch12", "training_labels.tif")),
+        ("Unseen Test\n(21 Jan)", os.path.join(data_dir, "patch_test", "winter_img", "training_labels.tif")),
     ]
     labels, snow_pct, cloud_pct = [], [], []
 
@@ -262,7 +262,7 @@ def plot_precision_recall_comparison():
     w = 0.27
 
     val_m1 = [54.73, 59.12, 56.84, 77.02]
-    val_m2 = [72.21, 62.66, 67.10, 82.58]
+    val_m2 = [64.35, 70.10, 67.10, 82.58]
     val_m3 = [66.39, 72.42, 69.27, 83.68]
 
     for idx, (scores, lbl, col, ecol) in enumerate([
@@ -277,7 +277,7 @@ def plot_precision_recall_comparison():
                          xytext=(0, 2), textcoords="offset points",
                          ha='center', va='bottom', fontsize=7.8, fontweight='bold')
 
-    ax1.set_title("(a) Validation Basin (patch12)")
+    ax1.set_title("(a) Validation Basin")
     ax1.set_xticks(x)
     ax1.set_xticklabels(metrics, fontsize=9.6, fontweight='bold')
     ax1.set_ylabel("Metric Score (%)")
@@ -300,7 +300,7 @@ def plot_precision_recall_comparison():
                          xytext=(0, 2), textcoords="offset points",
                          ha='center', va='bottom', fontsize=7.8, fontweight='bold')
 
-    ax2.set_title("(b) Unseen Spatial Transfer (patch_test)")
+    ax2.set_title("(b) Unseen Spatial Transfer")
     ax2.set_xticks(x)
     ax2.set_xticklabels(metrics, fontsize=9.6, fontweight='bold')
     ax2.set_ylabel("Metric Score (%)")
@@ -409,11 +409,11 @@ def plot_s2_optical_lis_demo(data_dir):
     axes[0, 0].axis('off')
 
     axes[0, 1].imshow(swir_rgb)
-    axes[0, 1].set_title("(b) SWIR Composite (B11/B4/B3)\n(Snow = Cyan, Clouds = White)", fontsize=10.5, fontweight='bold', pad=6)
+    axes[0, 1].set_title("(b) SWIR False-Color Composite\n(Snow = Cyan, Clouds = White)", fontsize=10.5, fontweight='bold', pad=6)
     axes[0, 1].axis('off')
 
     im_ndsi = axes[1, 0].imshow(ndsi, cmap='RdYlBu', vmin=-0.5, vmax=0.8)
-    axes[1, 0].set_title("(c) Spectral NDSI Map\n((B03 - B11) / (B03 + B11))", fontsize=10.5, fontweight='bold', pad=6)
+    axes[1, 0].set_title("(c) Spectral NDSI Map\n((Green - SWIR) / (Green + SWIR))", fontsize=10.5, fontweight='bold', pad=6)
     axes[1, 0].axis('off')
     cax = axes[1, 0].inset_axes([1.025, 0.0, 0.042, 1.0])
     cbar = fig.colorbar(im_ndsi, cax=cax)
@@ -729,8 +729,8 @@ def plot_model_outputs_comparison(data_dir, models_dir):
     cx, cy = 23424, 5120  # 1024x1024 window in patch12 with 46.8% cloud, 44.1% snow, DEM=[3616, 6490]m
 
     scenarios = [
-        ("Test: No Clouds", test_s1, test_mle, test_dem, test_lbl, tx, ty, 1024),
-        ("Test: Clouds", p12_s1, p12_mle, p12_dem, p12_lbl, cx, cy, 1024),
+        ("Test: Clear Sky", test_s1, test_mle, test_dem, test_lbl, tx, ty, 1024),
+        ("Val: Cloudy", p12_s1, p12_mle, p12_dem, p12_lbl, cx, cy, 1024),
     ]
 
     fig, axes = plt.subplots(2, 5, figsize=(13.0, 5.5), constrained_layout=True)

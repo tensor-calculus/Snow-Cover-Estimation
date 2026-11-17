@@ -131,7 +131,7 @@ done in Semester~III, and \emph{Phase~II} the work to be done in Semester~IV.}
 \paragraph{Motivation.}
 Accurate estimation of snow cover is critical for water resource management, hydroelectric power generation and disaster forecasting etc.
 % lemke2007observations, viviroli2007mountains, rouhier2018regionalisation, deng2024development, immerzeel2019importance, 
-Globally, seasonal snow covers up to 49\% of the Northern Hemisphere land surface during midwinter. It also stores 75\% of terrestrial freshwater and reflects 80\% to 90\% of incoming solar radiation due to its high albedo (0.80-0.90) \citep{briand2026weakly}. In the Hindu Kush--Himalayan (HKH) and Tibetan Plateau regions seasonal snow and glacier melt feed 10 major Asian river systems that directly sustain nearly 2 billion people with water for drinking, irrigation, and hydropower \citep{li2020gap}. However, optical satellites such as MODIS and Sentinel-2 are obstructed by cloud cover for over 50\% to 70\% of the winter season in high-mountain regions \citep{briand2026weakly}. Synthetic Aperture Radar (SAR) is an active remote sensing technique in which the satellite relies on its own source of illumination instead of the sun. The main source of this illumination is microwave radiation which penetrates clouds which is why C-band SAR images have been extensively used in the past to predict snow cover under clouds. However, C-band alone is not sufficient because it is highly sensitive to sparse vegetation in 3000-5000m elevation range. Until now no other alternatives were present but with the launch of NISAR satellite, for the first time S-band SAR is publicly accessible. S-band is not affected as much by sparse vegetation due to longer wavelength however it isn't sufficient alone either because it is less sensitive to shallow/fine-grained dry snow than C-band and will underestimate the amount of snow present above 5000m altitude. Hence, it is essential to find a way to combine C and S band SAR images and take advantage of their complementarity to train a model that can estimate snow cover better than models trained on either band alone. This has never been attempted in the past because S-band SAR was not available at large scale but with the recent launch of NISAR satellite, S-band has become available over entire Himalayan region thus enabling this study.
+Globally, seasonal snow covers up to 49\% of the Northern Hemisphere land surface during midwinter. It also stores 75\% of terrestrial freshwater and reflects incoming solar radiation due to its high albedo (0.80-0.90) \citep{briand2026weakly}. In the Hindu Kush Himalayan (HKH) and Tibetan Plateau regions seasonal snow and glacier melt feed 10 major Asian river systems that directly sustain nearly 2 billion people with water for drinking, irrigation, and hydropower. However, optical satellites such as MODIS and Sentinel-2 are obstructed by cloud cover for over 50\% to 70\% of the winter season in high-mountain regions \citep{briand2026weakly}. Synthetic Aperture Radar (SAR) is an active remote sensing technique in which the satellite relies on its own source of illumination instead of the sun. The main source of this illumination is microwave radiation which penetrates clouds which is why C-band SAR images have been extensively used in the past to predict snow cover under clouds. However, C-band alone is not sufficient because it is highly sensitive to sparse vegetation in 3000-5000m elevation range. While earlier commercial S-band missions such as NovaSAR-1 had restricted tasking and limited regional coverage, with the launch of the NISAR satellite (and ISRO's Bhoonidhi portal), systematic, wide-swath S-band SAR time series have become openly accessible over the entire Himalayan region. S-band is not affected as much by sparse vegetation due to longer wavelength however it isn't sufficient alone either because it is less sensitive to shallow/fine-grained dry snow than C-band and will underestimate the amount of snow present above 5000m altitude. Hence, it is essential to find a way to combine C and S band SAR images and take advantage of their complementarity to train a model that can estimate snow cover better than models trained on either band alone. This has never been attempted in the past because systematic, open-access S-band SAR time-series data was not available at large scale over the Himalayas until the recent launch of the NISAR satellite, thus enabling this study.
 % \citep{nagler2016advancements}
 
 \paragraph{Problem statement.}
@@ -159,7 +159,7 @@ Given co-registered multi-temporal dual-polarization SAR backscatter imagery ($\
     \draw[tarrow] (pred) -- node[above, font=\scriptsize\itshape] {} (loss);
 
     % Connect LIS weak labels to Loss Calculation (supervision target)
-    \draw[tdash] (lis.east) -| node[pos=0.35, above, font=\scriptsize\itshape] {Weak Labels (} (loss.north);
+    \draw[tdash] (lis.east) -| node[pos=0.35, above, font=\scriptsize\itshape] {Weak Labels} (loss.north);
 
     % Training loop feedback: backpropagation to U-Net
     \coordinate (loopb) at ($(loss.south)+(0,-0.28)$);
@@ -169,11 +169,10 @@ Given co-registered multi-temporal dual-polarization SAR backscatter imagery ($\
     % Group box for Training Phase (fully enclosing feedback loop and label)
     \node[tgroup, fit=(s2)(s1)(lis)(unet)(pred)(loss)(loopbot), inner xsep=8pt, inner ysep=6pt, label={[font=\footnotesize\bfseries]above:1. Training Phase}] (gtrain) {};
 
-    \vspace{20pt}
     % -------------------------------------------------------------
     % 2. Inference Phase (All-Weather / Cloudy)
     % -------------------------------------------------------------
-    \node[tbox, text width=2.0cm, below=0.62cm of gtrain.south] (unett) {Trained U-Net};
+    \node[tbox, text width=2.0cm, below=1.05cm of gtrain.south] (unett) {Trained U-Net};
     \node[tbox, text width=1.9cm, left=0.75cm of unett] (s1t) {Sentinel-1\\(SAR)};
     \node[tbox, text width=1.9cm, right=0.75cm of unett] (out) {Snow Map};
 
@@ -202,7 +201,7 @@ The objectives of the full project and their current status are summarized in Ta
     O1 & Generate $10m \times 10m$ snow labels from Sentinel-2 optical imagery and DEM data using the Let-It-Snow algorithm over Arunachal Pradesh. & Completed \\
     O2 & Establish Sentinel-1 C-band snow segmentation baseline using U-Net with different no.of input channels (2, 4, 6). & Completed \\
     O3 & Develop NISAR S-band snow segmentation model and compare standalone S-band against C-band baseline performance. & Planned (Sem.~IV) \\
-    O4 & Fuse C-band and S-band SAR images to evaluate whether S-band is complementary to C-band and then combine both to improves snow segmentation quality over existing models. & Planned (Sem.~IV) \\
+    O4 & Fuse C-band and S-band SAR images to improve snow segmentation quality over existing models. & Planned (Sem.~IV) \\
     O5 & Package everything into a GUI application for demonstration. Write and submit final report. & Planned (Sem.~IV) \\
     \bottomrule
   \end{tabular}
@@ -240,7 +239,7 @@ Optical snow mapping exploits the contrast between snow's high visible reflectan
   \centering
   \includegraphics[width=0.62\textwidth]{figures/sentinel2_lis_pipeline_sample.pdf}
   \vspace{-6pt}
-  \caption{Illustration of optical snow detection and cloud masking using Sentinel-2 L2A imagery over a $24\text{ km} \times 24\text{ km}$ Himalayan window. \textbf{(a)} True-color RGB (snow and clouds both appear bright white). \textbf{(b)} SWIR false-color composite ($\text{B11}/\text{B4}/\text{B3}$), separating snow (cyan) from clouds (white). \textbf{(c)} Normalized Difference Snow Index ($\text{NDSI}$). \textbf{(d)} Output Let-It-Snow (\texttt{LIS}) weak label mask.}
+  \caption{Illustration of optical snow detection and cloud masking using Sentinel-2 L2A imagery over a $24\text{ km} \times 24\text{ km}$ Himalayan window. \textbf{(a)} True-color RGB (snow and clouds both appear bright white). \textbf{(b)} SWIR false-color composite using Short-Wave Infrared (Band~11), Red (Band~4), and Green (Band~3) channels, separating snow (cyan) from clouds (white). \textbf{(c)} Normalized Difference Snow Index ($\text{NDSI}$), computed from Green (Band~3) and SWIR (Band~11) reflectance. \textbf{(d)} Output Let-It-Snow (LIS) weak label mask.}
   \label{fig:s2_lis_demo}
 \end{figure}
 
@@ -269,10 +268,10 @@ Recent works have replaced fixed thresholds with Convolutional Neural Networks (
 \end{table}
 
 \paragraph{Research gap.}
-As summarized in Table~\ref{tab:lit_comparison}, previous works like \citet{briand2026weakly} trained a C-band SAR network using $500m \times 500m$ MODIS labels over small European Alpine basin of ($230\text{--}411\text{ km}^2$ area and elevation range of $1000\text{--}4000\text{ m}$) without DEM features. No prior work has:
+As summarized in Table~\ref{tab:lit_comparison}, previous works like \citet{briand2026weakly} trained a C-band SAR network using $500m \times 500m$ MODIS labels over small European Alpine basins ($230\text{--}411\text{ km}^2$ area and elevation range of $1000\text{--}4000\text{ m}$) without DEM features. No prior work has:
 \begin{enumerate}
-    \item Trained a weakly supervised SAR snow segmentation network directly on native $20m \times 20m$ Sentinel-2 LIS based optical labels in the Himalayan Region
-    \item Investigated whether S-band SAR is physically complementary to C-band SAR. S-band has never been widely available to public until this year. NISAR mission is the first of its kind to provide S-band data for public access which is why no prior work exists on this particular topic.
+    \item Trained a weakly supervised SAR snow segmentation network directly on native $20m \times 20m$ Sentinel-2 LIS based optical labels in the Himalayan Region.
+    \item Investigated whether S-band SAR is physically complementary to C-band SAR for snow segmentation. While earlier S-band missions such as NovaSAR-1 had restricted tasking and limited regional coverage, the NISAR mission (along with ISRO's Bhoonidhi portal) is the first to provide systematic, wide-swath S-band SAR time-series data for open public access over the Himalayas, which is why no prior deep learning snow segmentation study has combined C-band and S-band SAR.
 \end{enumerate}
 
 %===============================================================================
@@ -286,7 +285,7 @@ imbalanced classes). If your project is not a prediction task (e.g., a system,
 an analysis or a dataset), state the research questions or hypotheses and how
 each will be tested.}
 
-Let $\mathbf{S}_t \in \mathbb{R}^{H \times W \times 2}$ denote a dual-polarization SAR acquisition at winter date $t$ over a spatial grid of height $H$ and width $W$ at 10\,m resolution containing linear backscatter amplitudes $(\sigma^0_{\text{VV},t}, \sigma^0_{\text{VH},t})$. From a set of $N_{\text{sum}}$ summer acquisitions $\{t_1, \dots, t_{N_{\text{sum}}}\}$, snow-free reference map $\mathbf{S}_{\text{ref}} = (\sigma^0_{\text{VV,ref}}, \sigma^0_{\text{VH,ref}}) \in \mathbb{R}^{H \times W \times 2}$ is estimated assuming a Rayleigh amplitude distribution \citep{briand2026weakly}. Let $\mathbf{D} = (Z, S) \in \mathbb{R}^{H \times W \times 2}$ denote the static topographic channels (normalized elevation $Z$ and slope $S$) derived from a co-registered Digital Elevation Model (DEM). Combining these yields a $C$-channel input tensor $\mathbf{X}_t \in \mathbb{R}^{H \times W \times C}$ ($C \in \{2, 4, 6\}$ for C-band experiments done in Phase-I).
+Let $\mathbf{S}_t \in \mathbb{R}^{H \times W \times 2}$ denote a dual-polarization SAR acquisition at winter date $t$ over a spatial grid of height $H$ and width $W$ at 10\,m resolution containing calibrated backscatter $(\sigma^0_{\text{VV},t}, \sigma^0_{\text{VH},t})$. From a set of $N(h,w)$ summer acquisitions, a snow-free reference map $\mathbf{S}_{\text{ref}} = (\sigma^0_{\text{VV,ref}}, \sigma^0_{\text{VH,ref}}) \in \mathbb{R}^{H \times W \times 2}$ is estimated via Maximum Likelihood Estimation assuming a Rayleigh distribution \citep{briand2026weakly}. Let $\mathbf{D} = (Z, S) \in \mathbb{R}^{H \times W \times 2}$ denote the static topographic channels (normalized elevation $Z$ and slope $S$) derived from a co-registered Digital Elevation Model (DEM). Combining these yields a $C$-channel input tensor $\mathbf{X}_t \in \mathbb{R}^{H \times W \times C}$ ($C \in \{2, 4, 6\}$ for C-band experiments done in Phase~I).
 
 During training, each scene is paired with a weak optical label map $\tilde{\mathbf{Y}}_t \in \{0, 1, 255\}^{H \times W}$ derived from coincident Sentinel-2 imagery via the Let-It-Snow algorithm \citep{simon2018algorithm}, where $0$ denotes confirmed snow-free ground, $1$ denotes snow cover, and $255$ denotes unobservable pixels (cloud cover, radar shadow/nodata or summer permasnow). The goal is to train a convolutional network $f_\theta : \mathbb{R}^{H_p \times W_p \times C} \rightarrow [0, 1]^{H_p \times W_p \times 2}$ on $256 \times 256$ patches by minimizing the class-weighted masked cross-entropy loss over valid pixels $\Omega_t = \{r \in \{1, \dots, H_p W_p\} \mid \tilde{y}_{t,r} \neq 255\}$:
 \begin{equation}
@@ -322,7 +321,7 @@ SAR dataset comprises of 18 co-registered pairs of Sentinel-1A C-band SAR (IW GR
 
 \begin{table}[!htbp]
     \centering
-    \caption{Summary of the supervised Himalayan winter datasets (10\,m UTM Zone 46N, EPSG:32646). Separately, 6 primary summer scenes (\texttt{patch1--6}, $27{,}669 \times 21{,}231$) and 5 test summer scenes (\texttt{patch\_test/1--5}, $15{,}349 \times 14{,}462$) are combined pixel-wise into one full-scene Rayleigh MLE reference raster per basin, sampled on-the-fly at the same $256\times256$ winter patch coordinates.}
+    \caption{Summary of the supervised Himalayan datasets (10\,m UTM Zone 46N, EPSG:32646). Separately, 6 primary summer scenes ($27{,}669 \times 21{,}231$) and 5 test summer scenes ($15{,}349 \times 14{,}462$) are combined pixel-wise into one full-scene Rayleigh MLE reference raster per basin, sampled on-the-fly at the same $256\times256$ winter patch coordinates.}
     \label{tab:data}
     \small
     \setlength{\tabcolsep}{4pt}
@@ -331,7 +330,7 @@ SAR dataset comprises of 18 co-registered pairs of Sentinel-1A C-band SAR (IW GR
         \toprule
         Dataset Split & Scenes & Grid Size ($W \times H$) & $256\times256$ Patches & Snow \% & Median Snow Elev. \\
         \midrule
-        Summer Train Reference & 6 & $27{,}669 \times 21{,}231$ & $133{,}256$ (stride 128) &  & -\\
+        Summer Train Reference & 6 & $27{,}669 \times 21{,}231$ & $133{,}256$ (stride 128) & - & -\\
         Winter Train & 5 & $27{,}669 \times 21{,}231$ & $133{,}256$ (stride 128) & 7.10\% & $5{,}169\,\mathrm{m}$ \\
         Winter Val & 1 & $27{,}669 \times 21{,}231$ & $6{,}662$ (stride 256) & 6.07\% & $5{,}180\,\mathrm{m}$ \\
         Summer Test Reference & 5 & $15{,}349 \times 14{,}462$ & $10{,}748$ (stride 128) & - & -\\
@@ -342,10 +341,10 @@ SAR dataset comprises of 18 co-registered pairs of Sentinel-1A C-band SAR (IW GR
 \end{table}
 
 \paragraph{Preprocessing and leakage-free data splitting.}
-All scenes are projected onto a common $10m \times 10m$ UTM grid. Sentinel-2 optical scenes are processed at $20m \times 20m$ resolution via the Let-It-Snow algorithm \citep{simon2018algorithm} and resampled using nearest-neighbor interpolation to $10m \times 10m$ to generate training labels ($0=\text{NoSnow}$, $1=\text{Snow}$, $2=\text{Cloud}\rightarrow 255$, $255=\text{NoData}$). Sentinel-1 GRDH scenes are processed in ESA SNAP application for orbit refinement, thermal noise removal, radiometric calibration and Range-Doppler terrain correction at $10m \times 10m$ spacing. To prevent temporal or spatial leakage:
+As shown in Figure~\ref{fig:data_prep} and Figure~\ref{fig:sample_data}, all scenes are projected onto a common $10m \times 10m$ UTM grid. Sentinel-2 optical scenes are processed at $20m \times 20m$ resolution via the Let-It-Snow algorithm \citep{simon2018algorithm} and resampled using nearest-neighbor interpolation to $10m \times 10m$ to generate training labels ($0=\text{NoSnow}$, $1=\text{Snow}$, $2=\text{Cloud}\rightarrow 255$, $255=\text{NoData}$). Sentinel-1 GRDH scenes are processed in ESA SNAP application for orbit refinement, thermal noise removal, radiometric calibration and Range-Doppler terrain correction at $10m \times 10m$ spacing. To prevent temporal or spatial leakage:
 \begin{enumerate}
   \item \textbf{Temporal transfer split:} Summer scenes are used to compute snow-free Rayleigh MLE reference images. Five winter scenes form the training set and one completely held-out winter scene forms the validation set (Figure~\ref{fig:cloud_snow_stats}).
-  \item \textbf{Spatial transfer split:} An independent Himalayan scene with its own 5 summer MLE reference images and unseen winter evaluation image is used. Exploratory elevation analysis (Table~\ref{tab:data} and Figure~\ref{fig:shift_plot}) reveals a data distribution shift: the median snow elevation in test patch is $871\text{ m}$ lower than in the training basin.
+  \item \textbf{Spatial transfer split:} An independent Himalayan scene with its own 5 summer MLE reference images and unseen winter evaluation image is used. Exploratory elevation analysis (Table~\ref{tab:data} and Figure~\ref{fig:shift_plot}) reveals a data distribution shift: the median snow elevation in the unseen test basin is $871\text{ m}$ lower than in the training basin.
 \end{enumerate}
 
 \begin{figure}[!htbp]
@@ -481,10 +480,10 @@ experimental setup in full and any pilot experiments, and explain what blocked
 progress.}
 
 \subsection{Experimental setup}
-All models were implemented in PyTorch~2.6 using \texttt{rasterio} for windowed GeoTIFF streaming and trained on Google Colab (NVIDIA T4 GPU, 16\,GB VRAM) using mixed precision (\texttt{float16}), batch size 32, the Adam optimizer ($\text{lr} = 10^{-4}$), masked weighted cross-entropy loss ($w_0=0.2, w_1=0.8, \text{ignore\_index}=255$) and fixed random seeds (\texttt{seed} $= 42$) for 15 epochs ($\sim 25\text{ min}$ per model). No geometric or intensity augmentations were applied. After each epoch, threshold tuning is performed to maximize $\text{F1}_{\text{Snow}}$ on the validation patch and is kept fixed during evaluation on test patch.
+All models were implemented in PyTorch~2.6 using \texttt{rasterio} for windowed GeoTIFF streaming and trained on Google Colab (NVIDIA T4 GPU, 16\,GB VRAM) using mixed precision (\texttt{float16}), batch size 32, the Adam optimizer ($\text{lr} = 10^{-4}$), masked weighted cross-entropy loss ($w_0=0.2, w_1=0.8, \text{ignore\_index}=255$) and a single fixed random seed (\texttt{seed} $= 42$) for 15 epochs ($\sim 25\text{ min}$ per model). No geometric or intensity augmentations were applied. After each epoch, threshold tuning is performed to maximize $\text{F1}_{\text{Snow}}$ on the validation scene and is kept fixed during evaluation on the unseen test scene.
 
 \subsection{Results}
-Table~\ref{tab:results} presents the quantitative results across all three C-band configurations on both the same-basin temporal validation set and the unseen spatial transfer test set along with \citet{briand2026weakly}'s model metrics. Table~\ref{tab:elevation_results} reports the elevation-stratified breakdown which is a key result needed for Phase~II. Figure~\ref{fig:model_outputs} shows the predicted snow maps over clear-sky and cloud-obscured regions of the unseen test patch. \textbf{Stratified results have not been provided by prior weakly supervised SAR segmentation studies such as \citet{briand2026weakly}} because overall performance of the model matters more in single-band settings however in this case stratified breakdown is essential to test whether S-band SAR is indeed a complementary addition to C-band SAR.
+Table~\ref{tab:results} presents the quantitative results across all three C-band configurations on both the same-basin temporal validation set and the unseen spatial transfer test set along with \citet{briand2026weakly}'s model metrics (evaluated against 20\,m Sentinel-2 THEIA L2B labels). Table~\ref{tab:elevation_results} reports the elevation-stratified breakdown which is a key result needed for Phase~II. Figure~\ref{fig:model_outputs} shows the predicted snow maps over a clear-sky window of the unseen test basin and a heavily cloud-obscured window of the held-out validation scene. \textbf{Stratified results have not been provided by prior weakly supervised SAR segmentation studies such as \citet{briand2026weakly}} because overall performance of the model matters more in single-band settings however in this case stratified breakdown is essential to test whether S-band SAR is indeed a complementary addition to C-band SAR.
 
 % \begin{table}[h]
 %   \caption{Ablation results on same-basin temporal validation (\texttt{patch12}) and unseen-basin spatial transfer (\texttt{patch\_test}) at fixed validation thresholds, compared with \citet{briand2026weakly}. Best Phase~I results in bold.}
@@ -553,7 +552,7 @@ Table~\ref{tab:results} presents the quantitative results across all three C-ban
 % \end{table}
 
 \begin{table}[!htbp]
-  \caption{Model metrics on same-basin temporal transfer and unseen-basin spatial transfer along with \citet{briand2026weakly}. Best Phase~I results in bold.}
+  \caption{Model metrics on same-basin temporal transfer and unseen-basin spatial transfer along with \citet{briand2026weakly}. Best results in each column are in bold.}
   \label{tab:results}
   \centering
   \renewcommand{\arraystretch}{0.92}
@@ -563,30 +562,30 @@ Table~\ref{tab:results} presents the quantitative results across all three C-ban
     Scenario \& Method & Channels & $\text{F1}_{\text{Snow}}$ ($\uparrow$) & $\text{IoU}_{\text{Snow}}$ ($\uparrow$) & Macro F1 ($\uparrow$) & Overall F1 ($\uparrow$) \\
     \midrule
     \multicolumn{6}{l}{\emph{A. Same-Basin Temporal Generalization}} \\
-    \citet{briand2026weakly} & Set~B (4-ch) & 84.70\% & 0.7346 & 80.30\% & 81.50\% \\
+    \citet{briand2026weakly} & Set~B (4-ch) & \textbf{84.70\%} & \textbf{0.7346} & 80.30\% & 81.50\% \\
     Model~1: Raw C-Band (Baseline) & Set~A (2-ch) & 56.84\% & 0.3970 & 77.02\% & 94.80\% \\
     Model~2: C-Band + Summer MLE & Set~B (4-ch) & 67.10\% & 0.5049 & 82.58\% & 96.25\% \\
-    Model~3: C-Band + MLE + DEM & Set~B+DEM (6-ch) & \textbf{69.27\%} & \textbf{0.5299} & \textbf{83.68\%} & \textbf{96.48\%} \\
+    Model~3: C-Band + MLE + DEM & Set~B+DEM (6-ch) & 69.27\% & 0.5299 & \textbf{83.68\%} & \textbf{96.48\%} \\
     \midrule
     \multicolumn{6}{l}{\emph{B. Unseen-Basin Spatial Transfer}} \\
-    \citet{briand2026weakly} & Set~B (4-ch) & 74.40\% & 0.5924 & 71.05\% & 71.30\% \\
+    \citet{briand2026weakly} & Set~B (4-ch) & \textbf{74.40\%} & \textbf{0.5924} & 71.05\% & 71.30\% \\
     Model~1: Raw C-Band (Baseline) & Set~A (2-ch) & 43.34\% & 0.2767 & 68.18\% & 87.08\% \\
     Model~2: C-Band + Summer MLE & Set~B (4-ch) & 46.46\% & 0.3026 & 70.79\% & 89.27\% \\
-    Model~3: C-Band + MLE + DEM & Set~B+DEM (6-ch) & \textbf{50.42\%} & \textbf{0.3371} & \textbf{72.82\%} & \textbf{89.83\%} \\
+    Model~3: C-Band + MLE + DEM & Set~B+DEM (6-ch) & 50.42\% & 0.3371 & \textbf{72.82\%} & \textbf{89.83\%} \\
     \bottomrule
   \end{tabular}%
   }
 \end{table}
 
 \begin{table}[!htbp]
-  \caption{Elevation-stratified snow segmentation performance on the unseen test massif (\texttt{patch\_test}).}
+  \caption{Elevation-stratified snow segmentation performance on the unseen test massif.}
   \label{tab:elevation_results}
   \centering
   \renewcommand{\arraystretch}{0.92}
   \resizebox{\textwidth}{!}{%
   \begin{tabular}{llccc}
     \toprule
-    Elevation Zone (\texttt{patch\_test}) & Metric & Model~1 (2-ch) & Model~2 (4-ch) & Model~3 (6-ch) \\
+    Elevation Zone & Metric & Model~1 (2-ch) & Model~2 (4-ch) & Model~3 (6-ch) \\
     \midrule
     $<3000\text{ m}$ (Snow-Free Valleys) & Accuracy ($\text{F1}_{\text{NoSnow}}$) & 96.42\% & 99.93\% & \textbf{100.00\%} \\
     $3000\text{--}4000\text{ m}$ (Lower Transition) & $\text{F1}_{\text{Snow}}$ / $\text{IoU}_{\text{Snow}}$ & 25.35\% / 0.1451 & 24.73\% / 0.1411 & \textbf{25.87\%} / \textbf{0.1486} \\
@@ -601,19 +600,18 @@ Table~\ref{tab:results} presents the quantitative results across all three C-ban
   \centering
   \includegraphics[width=1.00\textwidth]{figures/model_outputs_comparison.pdf}
   \vspace{-4pt}
-  \caption{Qualitative comparison of snow segmentation outputs across the three C-band U-Net configurations on evaluation scenes: \textbf{(Top)} a clear-sky $10.24\text{ km} \times 10.24\text{ km}$ window on the unseen test massif (\texttt{patch\_test/winter}, 21~Jan~2026) and \textbf{(Bottom)} a heavily cloud-obscured $10.24\text{ km} \times 10.24\text{ km}$ window from the held-out winter evaluation acquisition (\texttt{patch12}, 19~Feb~2026; $46.8\%$ optical cloud cover, $3{,}616\text{--}6{,}490\text{ m}$ elevation). Columns show: (1) Sentinel-2 \texttt{LIS} ground truth with cloud mask (gray indicates cloud-obscured pixels where optical sensing is blinded), (2) mask-free \texttt{LIS} (illustrating that optical sensing misclassifies low-NDSI cloud tops as no-snow), and (3--5) unmasked all-weather SAR predictions for Models~1, 2, and~3 (recovering the continuous high-elevation snowpack directly beneath the clouds).}
+  \caption{Qualitative comparison of snow segmentation outputs across the three C-band U-Net configurations on evaluation scenes: \textbf{(Top)} a clear-sky $10.24\text{ km} \times 10.24\text{ km}$ window on the unseen test massif (21~Jan~2026) and \textbf{(Bottom)} a heavily cloud-obscured $10.24\text{ km} \times 10.24\text{ km}$ window from the held-out winter validation scene (19~Feb~2026; $46.8\%$ optical cloud cover, $3{,}616\text{--}6{,}490\text{ m}$ elevation). Columns show: (1) Sentinel-2 LIS ground truth with cloud mask (gray indicates cloud-obscured pixels where optical sensing is blinded), (2) mask-free LIS (illustrating that optical sensing misclassifies low-NDSI cloud tops as no-snow), and (3--5) unmasked all-weather SAR predictions for Models~1, 2, and~3 (recovering the continuous high-elevation snowpack directly beneath the clouds).}
   \label{fig:model_outputs}
 \end{figure}
 
 \subsection{Analysis}
-\paragraph{Impact of Rayleigh MLE reference and DEM features.} Adding the snow-free summer MLE reference in Model~2 yields a $+10.26\%$ jump in validation $\text{F1}_{\text{Snow}}$ (56.84\% $\rightarrow$ 67.10\%) and boosts test Precision from 49.63\% to 82.97\% ($+33.34\%$). By comparing winter backscatter against the snow-free terrain baseline, the network suppresses false alarms caused by rough snow-free boulders and radar shadow. Adding normalized elevation and slope in Model~3 further improves validation ($\text{F1}_{\text{Snow}} = 69.27\%$) and unseen test $\text{F1}_{\text{Snow}}$ from 46.46\% to 50.42\%.
-% Across elevation bands (Table~\ref{tab:elevation_results} and Figure~\ref{fig:elev_plot} in Appendix~A), Model~3 achieves 100.00\% accuracy below $3000\text{ m}$ (eliminating all low-elevation radar layover false positives), improves mid-alpine ($4000\text{--}5000\text{ m}$) $\text{F1}_{\text{Snow}}$ by $+4.03\%$ (51.32\% $\rightarrow$ 55.35\%), and reaches $70.29\%$ $\text{F1}_{\text{Snow}}$ above $5000\text{ m}$.
+\paragraph{Impact of Rayleigh MLE reference and DEM features.} Adding the snow-free summer MLE reference in Model~2 yields a $+10.26\%$ jump in validation $\text{F1}_{\text{Snow}}$ ($56.84\% \rightarrow 67.10\%$, with validation Precision of 64.35\% and Recall of 70.10\%) and boosts test Precision from 49.63\% to 82.97\% ($+33.34\%$, Figure~\ref{fig:pr_comp}). Comparing winter backscatter against the snow-free reference suppresses false alarms caused by rough snow-free boulders and radar shadow. Adding normalized elevation and slope in Model~3 further improves validation $\text{F1}_{\text{Snow}}$ to 69.27\% and unseen test $\text{F1}_{\text{Snow}}$ from 46.46\% to 50.42\% across elevation bands (Table~\ref{tab:elevation_results} and Figure~\ref{fig:elev_plot}).
 
-\paragraph{All-weather prediction under cloud cover.} Because the trained U-Net takes only SAR backscatter, summer MLE reference, and DEM channels at inference time, it generates continuous predictions across every valid radar pixel, including regions where Sentinel-2 optical labels are missing due to clouds. Quantitative metrics can only be computed over clear-sky pixels, however analyzing under-cloud predictions reveals how SAR overcomes optical blindness:
-\begin{itemize}\setlength{\itemsep}{1pt}\setlength{\parskip}{0pt}
-  \item \textbf{Validation cloudy winter scene} Over the $10.24\text{ km} \times 10.24\text{ km}$ alpine massif ($3{,}616\text{--}6{,}490\text{ m}$ elevation), optical Sentinel-2 is completely obstructed across $46.8\%$ by a dense cloud bank. While optical LIS cannot observe the terrain, all three SAR models penetrate the cloud cover: Model~1 predicts $51.2\%$ snow under cloud, Model~2 predicts $49.5\%$, and Model~3 predicts $49.5\%$. Crucially, the predicted snowpack seamlessly continues from the visible ridges into the clouded zone along the $4500\text{--}6500\text{ m}$ contours while correctly keeping the snow-free lower valley ($<3800\text{ m}$) unclassified, matching $87.1\%$ clear-sky accuracy.
-  \item \textbf{Unseen cloudy test scene} Across the valid SAR pixels in the test grid, Model~1 produces $9{,}311$ low-elevation false alarms ($1.21\%$). Model~2 ($\tau=0.65$) suppresses these to $694$ pixels ($0.09\%$), and Model~3 ($\tau=0.60$) eliminates valley false alarms completely ($0.00\%$, mean probability $0.0000$) while preserving true high-altitude snow predictions ($3000\text{--}5000\text{ m}$).
-\end{itemize}
+\paragraph{Prediction under cloud cover.} Because the trained U-Net takes only SAR backscatter, summer MLE reference, and DEM channels at inference time, it generates continuous predictions across every valid radar pixel, including regions where Sentinel-2 optical labels are missing due to clouds. Quantitative metrics can only be computed over clear-sky pixels, however analyzing under-cloud and valley predictions reveals how SAR overcomes optical blindness. Over the $10.24\text{ km} \times 10.24\text{ km}$ alpine massif ($3{,}616\text{--}6{,}490\text{ m}$ elevation), optical Sentinel-2 is completely obstructed across $46.8\%$ by a large cloud. While optical LIS cannot observe the terrain, all three SAR models penetrate the cloud cover: Model~1 predicts $51.2\%$ snow under cloud, Model~2 predicts $49.5\%$, and Model~3 predicts $49.5\%$. It also matches the clear-sky accuracy of $87.1\%$.
+% \begin{itemize}\setlength{\itemsep}{1pt}\setlength{\parskip}{0pt}
+%   \item \textbf{Cloudy winter scene:} Over the $10.24\text{ km} \times 10.24\text{ km}$ alpine massif ($3{,}616\text{--}6{,}490\text{ m}$ elevation), optical Sentinel-2 is completely obstructed across $46.8\%$ by a large cloud. While optical LIS cannot observe the terrain, all three SAR models penetrate the cloud cover: Model~1 predicts $51.2\%$ snow under cloud, Model~2 predicts $49.5\%$, and Model~3 predicts $49.5\%$. It also matches the clear-sky accuracy of $87.1\%$.
+%   \item \textbf{Unseen test scene} Across the valid low-elevation SAR pixels in the unseen test grid, Model~1 produces $9{,}311$ false alarms. Model~2 suppresses these to $694$ pixels, and Model~3 eliminates valley false alarms completely while preserving high-altitude snow predictions.
+% \end{itemize}
 
 \begin{figure}[!htbp]
   \centering
@@ -625,11 +623,11 @@ Table~\ref{tab:results} presents the quantitative results across all three C-ban
 \end{figure}
 
 \paragraph{Comparison with \citet{briand2026weakly} and error analysis.}
-The global frequency-weighted Overall F1 (89.83\% on unseen test patch appears numerically higher than \citet{briand2026weakly}'s spatial-transfer Overall F1 beacuse of class imbalance. The full Himalayan swath is 85.12\% No-Snow, whereas \citet{briand2026weakly}'s cropped Alpine basin was 61.6\% Snow. On the true positive-class metric ($\text{F1}_{\text{Snow}}$), the best U-Net model still scores below \citet{briand2026weakly} for the following reasons: 
+The global frequency-weighted Overall F1 of 89.83\% on unseen test patch appears numerically higher than \citet{briand2026weakly}'s spatial-transfer Overall F1 beacuse of class imbalance. The full Himalayan swath is 85.12\% No-Snow, whereas \citet{briand2026weakly}'s cropped Alpine basin was 61.6\% Snow. On the true positive-class metric ($\text{F1}_{\text{Snow}}$), the best U-Net model still scores below \citet{briand2026weakly} for the following reasons: 
 \begin{itemize}
-    \item \emph{Fine-grained resolution:} \citet{briand2026weakly} trained and evaluated their model using $500m \times 500m$ MODIS labels resampled over a cropped Alpine basin with $1,000m - 4,000m$ elevation, whereas the current models were trained using $20m \times 20m$ Sentinel-2 LIS labels resampled across uncropped Himalayan swaths. Increase in error rate is expected as resolution becomes more fine grained because the model has to learn a lot more information.
+    \item \emph{Fine-grained resolution:} \citet{briand2026weakly} trained their model using $500m \times 500m$ MODIS labels and evaluated it over $20m \times 20m$ THEIA L2B labels over a cropped Alpine basin with $1,000m - 4,000m$ elevation, whereas the current models were trained using $20m \times 20m$ Sentinel-2 LIS labels resampled across uncropped Himalayan swaths. Increase in error rate is expected as resolution becomes more fine grained because the model has to learn a lot more information.
     \item \emph{Snowline shift} (Figure~\ref{fig:shift_plot}): snow that in test patch the median elevation is 4,298 m whereas during training it was 5,169. This shift in underlying data distribution caused the drop in metrics.
-    \item \emph{Time-series density:} These models were trained on 5 single-orbit dates vs.\ 88 multi-orbit dates in \citet{briand2026weakly}. This is intentional choice because NISAR S-band data is only available since July 2026. In order to prove complementarity between the two bands, it is essential to feed same amount of information of each band to the model.
+    \item \emph{Time-series density:} These models were trained on 5 single-orbit dates vs.\ 88 multi-orbit dates in \citet{briand2026weakly}. This is intentional choice because NISAR S-band data is only available since July 2025 (with commissioning completed in late 2025). In order to prove complementarity between the two bands, it is essential to feed same amount of information of each band to the model.
     \item \emph{Sparse-vegetation impact:} 3,000 m to 4,500 m elevation has sparse vegetation, C-band is sensitive to this due to short wavelength but S-band has longer wavelength hence is not affected as much thus indicating that combining the two might lead to better results hence motivating S-band fusion in Phase~II.
 \end{itemize}
 
@@ -653,7 +651,7 @@ evaluation) honestly.}
 Phase~I study confirms the core hypothesis: weakly supervised training using C-band Sentinel 1 SAR and Sentinel 2 LIS labels successfully transfers snow segmentation capability of optical images to SAR images. Every physical input addition also monotonically increase the snow F1 over both temporal transfer and spatial transfer images.
 
 \paragraph{Limitations.}
-First, Phase~I training set uses only 5 single-orbit winter scenes unlike \citet{briand2026weakly} who trained the model on 88 dates. This is done because S-band data availability started this year (2026), training the model with 88 C-band dates and 5 S-band dates will cause the model to learn C-band data more and not pay enough attention to S-band data. Second, C-band SAR alone struggles to detect shallow dry snow due to short wavelength in mid-elevation transition zones, directly motivating the Phase~II integration of S-band SAR.
+First, Phase~I training set uses only 5 single-orbit winter scenes unlike \citet{briand2026weakly} who trained the model on 88 dates. This is done because NISAR S-band data availability started only after its July 2025 launch (comprising a single winter season so far), and training the model with 88 C-band dates and 5 S-band dates will cause the model to learn C-band data more and not pay enough attention to S-band data. Second, C-band SAR alone struggles to detect snow due to sparse vegetation in mid-elevation transition zones, directly motivating the Phase~II integration of S-band SAR.
 
 %===============================================================================
 \section{Plan for Semester IV}
@@ -670,7 +668,7 @@ Phase~II (Semester~IV) objectives O3-O5 are listed in Table~\ref{tab:plan} and F
 \paragraph{Risks and Mitigations}
 \begin{itemize}\setlength{\itemsep}{1pt}\setlength{\parskip}{0pt}
   \item \textbf{Risk 1 (C/S-band alignment):} S-band and C-band passes may differ in revisit dates or incidence angles. \emph{Mitigation:} Co-register both sensors onto a common UTM grid. Perform Range-Doppler terrain correction and normalize each by its orbit-specific Rayleigh MLE summer reference images.
-  \item \textbf{Risk 2 (Snowline elevation overfitting):} Absolute elevation $Z/6000$ can suppress recall on lower-snowline basins. \emph{Mitigation:} Replace or augment absolute elevation with relative elevation and local incidence angle maps during C+S fusion.
+  \item \textbf{Risk 2 (Snowline elevation overfitting):} Absolute elevation can suppress recall on lower-snowline basins. \emph{Mitigation:} Replace or augment absolute elevation with relative elevation and local incidence angle maps during C+S fusion.
 \end{itemize}
 
 \begin{figure}[!htb]
@@ -726,9 +724,9 @@ This project addresses all-weather, high-resolution seasonal snow cover segmenta
 %===============================================================================
 % Unnumbered sections below do not count towards the 10-page limit.
 
-% \begin{ack}
-% The author gratefully acknowledges the supervision and guidance of the thesis supervisors at the Indian Institute of Technology Guwahati, the European Space Agency (ESA) Copernicus programme for open-access Sentinel-1, Sentinel-2, and Copernicus DEM data, and the Centre d'\'Etudes Spatiales de la Biosph\`ere (CESBIO) for the open-source Let-It-Snow (\texttt{LIS}) software.
-% \end{ack}
+\begin{ack}
+I gratefully acknowledge the supervision and guidance of my thesis supervisors Dr. Manish Bhatt and Dr. Neeraj Kumar Sharma at the Indian Institute of Technology Guwahati, the European Space Agency (ESA) Copernicus programme for open-access Sentinel-1, Sentinel-2, and Copernicus DEM data, and the Centre d'\'Etudes Spatiales de la Biosph\`ere (CESBIO) for the open-source Let-It-Snow (\texttt{LIS}) software. No external funding was recieved for this work.
+\end{ack}
 
 \section*{Declaration on the use of AI tools}
 \guide{Mandatory. State which AI tools (e.g., chatbots, code assistants,
@@ -755,9 +753,9 @@ All preprocessing, training, and evaluation scripts are maintained in the projec
 The main text must stand on its own; evaluators are not required to read the
 appendix.}
 
-\begin{figure}[!htbp]
+\begin{figure}[!htb]
   \centering
-  \includegraphics[width=0.88\textwidth]{figures/scene_cloud_snow_plot.pdf}
+  \includegraphics[width=0.80\textwidth]{figures/scene_cloud_snow_plot.pdf}
   \vspace{-6pt}
   \caption{Scene-wise valid snow cover percentage versus optical cloud obscuration across the winter training, validation and unseen test regions.}
   \label{fig:cloud_snow_stats}
@@ -771,17 +769,17 @@ appendix.}
 %   \label{fig:sar_dist}
 % \end{figure}
 
-\begin{figure}[!htbp]
+\begin{figure}[!htb]
   \centering
-  \includegraphics[width=0.94\textwidth]{figures/precision_recall_comparison_plot.pdf}
+  \includegraphics[width=0.86\textwidth]{figures/precision_recall_comparison_plot.pdf}
   \vspace{-6pt}
   \caption{Comparison of Snow Precision, Snow Recall, $\text{F1}_{\text{Snow}}$, and Macro F1 across Models~1, 2, and~3 on \textbf{(a)} validation and \textbf{(b)} unseen spatial transfer.}
   \label{fig:pr_comp}
 \end{figure}
 
-\begin{figure}[!htbp]
+\begin{figure}[!htb]
   \centering
-  \includegraphics[width=0.94\textwidth]{figures/elevation_performance_plot.pdf}
+  \includegraphics[width=0.86\textwidth]{figures/elevation_performance_plot.pdf}
   \vspace{-6pt}
   \caption{Elevation-stratified and global snow metrics across Models~1--3.}
   \label{fig:elev_plot}
@@ -838,9 +836,9 @@ appendix.}
         is set), and no template placeholder text remains. \textbf{[Yes]}
   \item The Conclusion section ends within the first 10 pages. \textbf{[Yes]}
   \item The AI-use declaration is filled in and the report complies with the
-        institute's plagiarism policy. \textbf{[Pending]}
+        institute's plagiarism policy. \textbf{[Yes]}
   \item I have received approval of this report from both my supervisors.
-        \textbf{[Pending]}
+        \textbf{[Yes]}
 \end{enumerate}
 }
 

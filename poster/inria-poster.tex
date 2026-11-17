@@ -196,7 +196,7 @@ before skip=5pt, after skip=5pt}
         \end{column}%\hfill
         \begin{column}{0.32\linewidth}
           \begin{inriablock}{}
-            \large Hence SAR based methods were created... \textcolor{inria-rouge}{\textbf{This work proposes one such method!}}
+            \large Hence SAR based methods were created... \textcolor{inria-rouge}{\textbf{This project proposes one such method!}}
           \end{inriablock}
         \end{column}
       \end{columns}
@@ -212,11 +212,11 @@ before skip=5pt, after skip=5pt}
         \begin{column}{.485\linewidth}
           \begin{inriastartblock}{Context}
             \begin{itemize}
-              \item Nothing can beat snow cover estimated using optical images, when the sky is clear.
-              \item But, sky is not always clear. During winter $>50\%$ of sky over a region can be filled with clouds.
-              \item Synthetic Aperture Radar is an active remote sensing technique that can penetrate clouds!
-              \item But it cannot identify snow on its own.
-              \item Enter Deep Learning - We can teach it to identify snow!
+              \item Nothing beats snow cover estimated using optical images when the sky is clear!
+              \item But the sky is not always clear, during winter, $>50\%$ of the sky over a region can be covered by clouds.
+              \item Synthetic Aperture Radar (SAR) is an active remote sensing technique that penetrates right through clouds!
+              \item However, raw winter SAR images struggle to distinguish snow from ground on its own.
+              \item Enter Deep Learning - we can teach a model to spot snow in any weather! We just need summer SAR images, DEM and labels.
             \end{itemize}
         \end{inriastartblock}
         \begin{inriablock}{Weakly Supervised Framework}
@@ -227,17 +227,17 @@ before skip=5pt, after skip=5pt}
                 % 1. Training Phase (Clear-Sky Days)
                 % -------------------------------------------------------------
                 % Row 1: Optical weak label branch
-                \node[tbox_optical, text width=6.3cm, minimum height=1.65cm] (s2) {\textbf{Sentinel-2}\\[2pt]\small(Optical Image)};
-                \node[tbox_optical, text width=6.3cm, minimum height=1.65cm, right=1.5cm of s2] (lis) {\textbf{Snow Labels}\\[2pt]\small(Let-It-Snow)};
+                \node[tbox_optical, text width=6.3cm, minimum height=1.65cm] (s2) {\textbf{Sentinel-2}\\[2pt]\small(Optical)};
+                \node[tbox_optical, text width=6.3cm, minimum height=1.65cm, right=1.5cm of s2] (lis) {\textbf{Let-It-Snow}};
                 \draw[tarrow] (s2) -- (lis);
 
                 % Row 2: SAR forward pass branch
-                \node[tbox_sar, text width=6.3cm, minimum height=1.65cm, below=0.75cm of s2] (s1) {\textbf{Sentinel-1}\\[2pt]\small(SAR Backscatter)};
+                \node[tbox_sar, text width=6.3cm, minimum height=1.65cm, below=0.75cm of s2] (s1) {\textbf{Sentinel-1}\\[2pt]\small(SAR)};
                 \node[tbox_model, text width=6.3cm, minimum height=1.65cm, right=1.5cm of s1] (unet) {\textbf{U-Net Model}\\[2pt]\small(Segmentation)};
                 \node[tbox_output, text width=6.3cm, minimum height=1.65cm, right=1.5cm of unet] (pred) {\textbf{Predicted}\\[2pt]\textbf{Snow Map}};
                 \node[tbox_loss, text width=6.3cm, minimum height=1.65cm, right=1.5cm of pred] (loss) {\textbf{Loss Function}\\[2pt]\small(Cross-Entropy)};
 
-                \draw[tarrow] (s1) -- node[midway, above=-1pt, font=\footnotesize\itshape] {Input} (unet);
+                \draw[tarrow] (s1) -- node[midway, above=-1pt, font=\footnotesize\itshape] {} (unet);
                 \draw[tarrow] (unet) -- (pred);
                 \draw[tarrow] (pred) -- (loss);
 
@@ -249,78 +249,62 @@ before skip=5pt, after skip=5pt}
                 \draw[tarrow, draw=inria-rouge] (loss.south) -- (loopb) -- (loopb -| unet.south) node[midway, below=2pt, font=\small\bfseries, text=inria-rouge] (looplabel) {Backpropagation (Training Loop)} -- (unet.south);
 
                 % Group box for Training Phase (fully enclosing feedback loop and label)
-                \node[tgroup, fit=(s2)(s1)(lis)(unet)(pred)(loss)(looplabel), label={[font=\normalsize\bfseries, text=inria-2024-bleu-nuit]above:\textbf{1. Training Phase (Clear-Sky Days)}}] (gtrain) {};
+                \node[tgroup, fit=(s2)(s1)(lis)(unet)(pred)(loss)(looplabel), label={[font=\normalsize\bfseries, text=inria-2024-bleu-nuit]above:\textbf{1. Training Phase}}] (gtrain) {};
 
                 % -------------------------------------------------------------
                 % 2. Inference Phase (All-Weather / Cloudy)
                 % -------------------------------------------------------------
-                \node[tbox_model, text width=7.0cm, minimum height=1.65cm, below=2.8cm of gtrain.south] (unett) {\textbf{Trained U-Net}\\[2pt]\small(Frozen Weights)};
-                \node[tbox_sar, text width=7.0cm, minimum height=1.65cm, left=1.6cm of unett] (s1t) {\textbf{Sentinel-1}\\[2pt]\small(Cloudy / All-Weather)};
-                \node[tbox_output, text width=7.0cm, minimum height=1.65cm, right=1.6cm of unett] (out) {\textbf{Snow Cover Map}\\[2pt]\small(Segmented Output)};
+                \node[tbox_model, text width=7.0cm, minimum height=1.65cm, below=2.1cm of gtrain.south] (unett) {\textbf{Trained U-Net}};
+                \node[tbox_sar, text width=7.0cm, minimum height=1.65cm, left=1.6cm of unett] (s1t) {\textbf{Sentinel-1}\\[2pt]\small(SAR)};
+                \node[tbox_output, text width=7.0cm, minimum height=1.65cm, right=1.6cm of unett] (out) {\textbf{Snow Cover Map}};
 
-                \draw[tarrow] (s1t) -- node[midway, above=-1pt, font=\footnotesize\itshape] {Input} (unett);
+                \draw[tarrow] (s1t) -- node[midway, above=-1pt, font=\footnotesize\itshape] {} (unett);
                 \draw[tarrow] (unett) -- (out);
 
-                \node[tgroup, fit=(s1t)(unett)(out), inner xsep=14pt, inner ysep=6pt, label={[font=\normalsize\bfseries, text=inria-2024-bleu-nuit]above:\textbf{2. Inference Phase (All-Weather / Cloudy)}}] (ginf) {};
+                \node[tgroup, fit=(s1t)(unett)(out), inner xsep=14pt, inner ysep=5pt, label={[font=\normalsize\bfseries, text=inria-2024-bleu-nuit]above:\textbf{2. Inference Phase}}] (ginf) {};
               \end{tikzpicture}
               \vspace{0.2em}
-              \caption{Weakly Supervised Training and Inference Flow Diagram}
               \label{fig:concept}
             \end{figure}
           \end{inriablock}
 
           \begin{inriablock}{Defining the Objectives:}
             \begin{enumerate}
-              \item Build reusable satellite image preprocessing pipeline. ($70\%$ of the work 'cause satellite images contain too much information!) \ding{51}
+              \item Build reusable satellite image preprocessing pipeline ($70\%$ of the work 'cause satellite images contain too much information!). \ding{51}
               \item Generate labels needed to train the model using optical images (hence weakly supervised). \ding{51}
-              \item Train model on C-band and get elevation wise metrics. \ding{51}
-              \item Train model on S-band and get elevation wise metrics.
-              \item Prove they are complementary and device a novel approach to combine them!
+              \item Train model on C-band (+ summer MLE \& DEM) and get elevation-wise metrics. \ding{51}
+              \item Train model on S-band (NISAR) and get elevation-wise metrics.
+              \item Prove they are complementary and devise a novel approach to combine them!
               \item Use the new model to outperform previous best-performing model of Briand et al.
               \item Package everything into a GUI for demonstration.
             \end{enumerate}
-            % \begin{takeaway}
-              
-            % \end{takeaway}
           \end{inriablock}
 
-          \begin{inriablock}{Laying out the Timeline}
+          \begin{inriablock}{Laying out the Timeline (Phase II)}
             \begin{itemize}
-                \item Result by end of February.
+                \item S-band \& C+S fusion results by end of February 2027.
                   \begin{itemize}
                     \item Either positive or negative result. Both are meaningful!
                   \end{itemize}
-                \item Submit paper by end of March.
-                \item Create GUI by end of April.
+                \item Submit paper by end of March 2027.
+                \item Create GUI by end of April 2027.
                   \begin{itemize}
-                    \item Time taken $\propto$ no.of external dependencies.
-                    \item Because they have a tendency to not cooperate.
+                    \item Time taken $\propto$ no.\ of external dependencies (because they have a tendency not to cooperate!).
                   \end{itemize}
               \end{itemize}
           \end{inriablock}
 
-          % % a simple block to put context
-          % \begin{plainblock}{}
-          %   \centering
-          %   %\begin{adjustbox}{max width=0.83\textwidth}
-          %   \input{sample-figs/tikz-sample-figure}
-          %   %\end{adjustbox}
-          % \end{plainblock}
-
           \begin{inriablock}{About the Data...}
             \begin{itemize}
-              \item Each satellite image corresponds to a different acquisition date.
+              \item \textbf{Study Area:} Himalayan basins in Himachal Pradesh \& Ladakh, India (each scene is a distinct acquisition date):
                 \begin{itemize}
-                  \item Winter training patches = 5
-                  \item Winter validation patches = 1
-                  \item WInter test patches = 1
-                  \item Summer training references = 6
-                  \item Summer testing references = 5
+                  \item Winter scenes: 5 training ($133\text{k}$ patches), 1 validation ($6.6\text{k}$ patches), 1 unseen test ($10.7\text{k}$ patches).
+                  \item Snow-free summer references (Rayleigh MLE): 6 training scenes, 5 testing scenes.
                 \end{itemize}
-              \item \textbf{Optical}: Sentinel-2 satellites at $20m \times 20m$ resolution1. Labels are generated using Let-It-Snow algorithm
-              \item \textbf{SAR C-band:} Sentinel-1 satellites at $10m \times 10m$ resolution.
-              \item \textbf{DEM:} TanDEM-X satellites at $30m \times 30m$ resolution.
-              \item All these satellite products are open-access on their website under Copernicus free and open data license.
+              \item \textbf{Optical (Labels):} Sentinel-2 L2A ($20\,\text{m}$ bands resampled to $10\,\text{m}$ via Let-It-Snow).
+              \item \textbf{SAR C-band:} Sentinel-1 IW GRD (VV \& VH at $10\,\text{m} \times 10\,\text{m}$ resolution).
+              \item \textbf{DEM:} Copernicus GLO-30 (derived from TanDEM-X, warped from $30\,\text{m}$ to $10\,\text{m}$).
+              \item All products are free and open-access under the Copernicus data license!
             \end{itemize}
           \end{inriablock}
 
@@ -374,10 +358,10 @@ before skip=5pt, after skip=5pt}
           % You can move this block around to fit your poster content
           \begin{plainblock}{}
             \begin{columns}[c]
-              \begin{column}{0.092\textwidth}
-                \qrcode[height=\textwidth,hyperlink]{https://github.com/tensor-calculus/Snow-Cover-Estimation}
+              \begin{column}{0.13\textwidth}
+                \href{https://github.com/tensor-calculus/Snow-Cover-Estimation}{\includegraphics[width=\linewidth]{figures/qr_code.pdf}}
               \end{column}
-              \begin{column}{0.9\textwidth}%
+              \begin{column}{0.84\textwidth}%
                 {\linespread{0.83}\footnotesize\fullcite{this-paper}\\[-1.28ex]
                 \textbf{Code:} \url{https://github.com/tensor-calculus/Snow-Cover-Estimation}}
               \end{column}
@@ -390,7 +374,7 @@ before skip=5pt, after skip=5pt}
           \begin{inriablock}{The Full Pipeline}
             \begin{figure}[!htbp]
               \centering
-              \includegraphics[width=0.98\linewidth,keepaspectratio]{figures/Pipeline.pdf}
+              \includegraphics[width=0.96\linewidth,keepaspectratio]{figures/Pipeline.pdf}
               \vspace{0.2em}
               % \caption{End-to-end multi-sensor preprocessing, patch extraction, and CNN training workflow.}
               % \label{fig:pipeline}
@@ -423,16 +407,16 @@ before skip=5pt, after skip=5pt}
                 Scenario \& Method & Channels & $\text{F1}_{\text{Snow}}$ ($\uparrow$) & $\text{IoU}_{\text{Snow}}$ ($\uparrow$) & Macro F1 ($\uparrow$) & Overall F1 ($\uparrow$) \\
                 \midrule
                 \multicolumn{6}{l}{\emph{A. Same-Basin Temporal Generalization}} \\
-                Briand et al. & Set~B (4-ch) & 84.70\% & 0.7346 & 80.30\% & 81.50\% \\
+                Briand et al.\ (European Alps) & Set~B (4-ch) & \textbf{84.70\%} & \textbf{0.7346} & 80.30\% & 81.50\% \\
                 Model~1: Raw C-Band (Baseline) & Set~A (2-ch) & 56.84\% & 0.3970 & 77.02\% & 94.80\% \\
                 Model~2: C-Band + Summer MLE & Set~B (4-ch) & 67.10\% & 0.5049 & 82.58\% & 96.25\% \\
-                Model~3: C-Band + MLE + DEM & Set~B+DEM (6-ch) & \textbf{69.27\%} & \textbf{0.5299} & \textbf{83.68\%} & \textbf{96.48\%} \\
+                Model~3: C-Band + MLE + DEM & Set~B+DEM (6-ch) & 69.27\% & 0.5299 & \textbf{83.68\%} & \textbf{96.48\%} \\
                 \midrule
                 \multicolumn{6}{l}{\emph{B. Unseen-Basin Spatial Transfer}} \\
-                Briand et al. & Set~B (4-ch) & 74.40\% & 0.5924 & 71.05\% & 71.30\% \\
+                Briand et al.\ (European Alps) & Set~B (4-ch) & \textbf{74.40\%} & \textbf{0.5924} & 71.05\% & 71.30\% \\
                 Model~1: Raw C-Band (Baseline) & Set~A (2-ch) & 43.34\% & 0.2767 & 68.18\% & 87.08\% \\
                 Model~2: C-Band + Summer MLE & Set~B (4-ch) & 46.46\% & 0.3026 & 70.79\% & 89.27\% \\
-                Model~3: C-Band + MLE + DEM & Set~B+DEM (6-ch) & \textbf{50.42\%} & \textbf{0.3371} & \textbf{72.82\%} & \textbf{89.83\%} \\
+                Model~3: C-Band + MLE + DEM & Set~B+DEM (6-ch) & 50.42\% & 0.3371 & \textbf{72.82\%} & \textbf{89.83\%} \\
                 \bottomrule
               \end{tabular}%
               }
@@ -440,7 +424,7 @@ before skip=5pt, after skip=5pt}
             \vspace{10pt}
 
             \begin{table}[!htbp]
-              \caption{Elevation wise metrics for unseen test patch}
+              \caption{Elevation-wise metrics on the unseen test basin}
               \label{tab:elevation_results}
               \vspace{-1.4em}
               \centering
@@ -448,7 +432,7 @@ before skip=5pt, after skip=5pt}
               \resizebox{\textwidth}{!}{%
               \begin{tabular}{llccc}
                 \toprule
-                Elevation Zone (\texttt{patch\_test}) & Metric & Model~1 (2-ch) & Model~2 (4-ch) & Model~3 (6-ch) \\
+                Elevation Zone & Metric & Model~1 (2-ch) & Model~2 (4-ch) & Model~3 (6-ch) \\
                 \midrule
                 $<3000\text{ m}$ (Snow-Free Valleys) & Accuracy ($\text{F1}_{\text{NoSnow}}$) & 96.42\% & 99.93\% & \textbf{100.00\%} \\
                 $3000\text{--}4000\text{ m}$ (Lower Transition) & $\text{F1}_{\text{Snow}}$ / $\text{IoU}_{\text{Snow}}$ & 25.35\% / 0.1451 & 24.73\% / 0.1411 & \textbf{25.87\%} / \textbf{0.1486} \\
@@ -458,6 +442,7 @@ before skip=5pt, after skip=5pt}
               \end{tabular}%
               }
             \end{table}
+            \vspace{12pt}
             \end{findingblock}
 
             % \begin{findingblock}{Finding 2. This is actually cool.}{violet}
@@ -507,6 +492,12 @@ before skip=5pt, after skip=5pt}
             %     \end{column}
             %   \end{columns}
             % \end{findingblock}
+            \begin{findingblock}{What's the difference?}{violet}
+              \begin{figure}[!htbp]
+                \centering
+                \includegraphics[width=\linewidth,keepaspectratio]{figures/model_outputs_comparison_3col.pdf}
+              \end{figure}
+            \end{findingblock}
           \end{plainblock}
 
           % \begin{inriafinalblock}{Final remarks}

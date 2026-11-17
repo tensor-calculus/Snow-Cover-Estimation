@@ -11,8 +11,8 @@ Inputs: "Multi-Sensor Inputs" {
   style.fill: "#edf0fd"
   style.stroke: "#0d32b2"
   style.stroke-width: 6
-  style.font-size: 100
-  *.style.font-size: 76
+  style.font-size: 90
+  *.style.font-size: 68
   *.style.stroke-width: 5
   S1: "Sentinel-1 GRD (SAR)"
   DEM_Raw: "Copernicus DEM (WGS84)"
@@ -29,12 +29,12 @@ Preprocessing: {
     style.fill: "#fff3e0"
     style.stroke: "#0d32b2"
     style.stroke-width: 6
-    style.font-size: 90
-    *.style.font-size: 72
+    style.font-size: 80
+    *.style.font-size: 64
     *.style.stroke-width: 5
     Pre_Process: "Apply Orbit File\n-> Thermal Noise Removal\n-> Radiometric Calibration"
     Terrain_Correction: "Range-Doppler\nTerrain Correction"
-    DB_Conversion: "Convert to dB (Log Scale)\n& VV/VH Ratio"
+    DB_Conversion: "Winter Backscatter (dB)\n+ Summer Rayleigh MLE Ref"
     Pre_Process -> Terrain_Correction -> DB_Conversion: {class: conn}
   }
 
@@ -42,12 +42,12 @@ Preprocessing: {
     style.fill: "lightgray"
     style.stroke: "#0d32b2"
     style.stroke-width: 6
-    style.font-size: 90
-    *.style.font-size: 72
+    style.font-size: 80
+    *.style.font-size: 64
     *.style.stroke-width: 5
     Mosaic: "Stitch WGS84 Tiles"
     Reproject: "Warp to 10m UTM"
-    Aligned_DEM: "Aligned DEM (10m UTM)"
+    Aligned_DEM: "Aligned DEM (10m UTM)\n+ Terrain Slope"
     Mosaic -> Reproject -> Aligned_DEM: {class: conn}
   }
 
@@ -55,13 +55,13 @@ Preprocessing: {
     style.fill: "#e0f7fa"
     style.stroke: "#0d32b2"
     style.stroke-width: 6
-    style.font-size: 90
-    *.style.font-size: 72
+    style.font-size: 80
+    *.style.font-size: 64
     *.style.stroke-width: 5
     Pass_1: "High-Confidence Snow\n(NDSI > 0.4 & Red > 0.2)"
     Pass_2: "Snow-Line Extension\n(NDSI > 0.15 + DEM)"
     Cloud_Filter: "Apply L2A Cloud Masks\n+ Snow/Cloud Filter"
-    FSC_TOC: "Fractional Snow Cover\n(FSC-TOC)"
+    FSC_TOC: "Binary Snow Labels\n(Snow, No-Snow, Cloud)"
     Pass_1 -> Pass_2 -> Cloud_Filter -> FSC_TOC: {class: conn}
   }
 }
@@ -73,31 +73,29 @@ Downstream: {
   style.fill: transparent
 
   Dataset_Generation: "Dataset Generation" {
-    grid-columns: 2
     style.fill: "#e8f5e9"
     style.stroke: "#0d32b2"
     style.stroke-width: 6
-    style.font-size: 90
-    *.style.font-size: 72
+    style.font-size: 80
+    *.style.font-size: 64
     *.style.stroke-width: 5
-    Binarize: "Map LIS to Classes\n(Snow, NoSnow, Cloud)"
+    Binarize: "Fuse Multi-Sensor Rasters\n(SAR + Summer MLE + DEM)"
     Extract: "Sliding Window\n256x256 Patches"
-    Filter: "Discard Patches\nwith 100% NoData"
-    Save: "Export Dataset\nglobal_patches (.npy)"
+    Filter: "Discard Invalid &\nPermasnow Patches"
+    Save: "Export Valid Patch\nCoordinates (.npy)"
     Binarize -> Extract -> Filter -> Save: {class: conn}
   }
 
   Deep_Learning: "Deep Learning Pipeline" {
-    grid-columns: 2
     style.fill: "#f3e5f5"
     style.stroke: "#0d32b2"
     style.stroke-width: 6
-    style.font-size: 90
-    *.style.font-size: 72
+    style.font-size: 80
+    *.style.font-size: 64
     *.style.stroke-width: 5
-    PyTorch_Dataset: "Load Patches\nMap Cloud -> NoData"
-    Train: "Train CNN Architecture\n(Loss ignore_index=255)"
-    Eval: "Model Inference\non Test Benchmark"
+    PyTorch_Dataset: "Load 6-Channel Patches\nMask Clouds (255)"
+    Train: "Train U-Net Architecture\n(Loss ignore_index=255)"
+    Eval: "Model Inference\non Unseen Test Basin"
     Bins: "Elevation Bins Eval\n(<3k, 3-4k, 4-5k, >5k m)"
     PyTorch_Dataset -> Train -> Eval -> Bins: {class: conn}
   }
