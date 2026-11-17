@@ -215,7 +215,7 @@
           \begin{inriablock}{The Full Pipeline}
             \begin{figure}[!htbp]
               \centering
-              \includegraphics[width=0.6\linewidth,keepaspectratio]{figures/Pipeline.pdf}
+              \includegraphics[width=0.98\linewidth,keepaspectratio]{figures/Pipeline.pdf}
               \vspace{0.2em}
               % \caption{End-to-end multi-sensor preprocessing, patch extraction, and CNN training workflow.}
               % \label{fig:pipeline}
@@ -239,6 +239,7 @@
                 \begin{table}[!htbp]
               \caption{Model metrics along with \citet{briand2026weakly}}
               \label{tab:results}
+              \vspace{-1.4em}
               \centering
               \renewcommand{\arraystretch}{0.92}
               \resizebox{\textwidth}{!}{%
@@ -266,6 +267,7 @@
             \begin{table}[!htbp]
               \caption{Elevation wise metrics for unseen test patch}
               \label{tab:elevation_results}
+              \vspace{-1.4em}
               \centering
               \renewcommand{\arraystretch}{0.92}
               \resizebox{\textwidth}{!}{%

@@ -1,0 +1,117 @@
+direction: down
+
+classes: {
+  conn: {
+    style.stroke-width: 7
+  }
+}
+
+Inputs: "Multi-Sensor Inputs" {
+  shape: cylinder
+  style.fill: "#edf0fd"
+  style.stroke: "#0d32b2"
+  style.stroke-width: 6
+  style.font-size: 100
+  *.style.font-size: 76
+  *.style.stroke-width: 5
+  S1: "Sentinel-1 GRD (SAR)"
+  DEM_Raw: "Copernicus DEM (WGS84)"
+  S2: "Sentinel-2 L2A (Optical)"
+}
+
+Preprocessing: {
+  label: ""
+  grid-columns: 3
+  style.stroke: transparent
+  style.fill: transparent
+
+  SAR_Preprocessing_SNAP: "SAR Preprocessing (SNAP)" {
+    style.fill: "#fff3e0"
+    style.stroke: "#0d32b2"
+    style.stroke-width: 6
+    style.font-size: 90
+    *.style.font-size: 72
+    *.style.stroke-width: 5
+    Pre_Process: "Apply Orbit File\n-> Thermal Noise Removal\n-> Radiometric Calibration"
+    Terrain_Correction: "Range-Doppler\nTerrain Correction"
+    DB_Conversion: "Convert to dB (Log Scale)\n& VV/VH Ratio"
+    Pre_Process -> Terrain_Correction -> DB_Conversion: {class: conn}
+  }
+
+  DEM_Preprocessing: "DEM Preprocessing" {
+    style.fill: "lightgray"
+    style.stroke: "#0d32b2"
+    style.stroke-width: 6
+    style.font-size: 90
+    *.style.font-size: 72
+    *.style.stroke-width: 5
+    Mosaic: "Stitch WGS84 Tiles"
+    Reproject: "Warp to 10m UTM"
+    Aligned_DEM: "Aligned DEM (10m UTM)"
+    Mosaic -> Reproject -> Aligned_DEM: {class: conn}
+  }
+
+  Let_It_Snow_Algorithm: "Let-It-Snow (LIS) Algorithm" {
+    style.fill: "#e0f7fa"
+    style.stroke: "#0d32b2"
+    style.stroke-width: 6
+    style.font-size: 90
+    *.style.font-size: 72
+    *.style.stroke-width: 5
+    Pass_1: "High-Confidence Snow\n(NDSI > 0.4 & Red > 0.2)"
+    Pass_2: "Snow-Line Extension\n(NDSI > 0.15 + DEM)"
+    Cloud_Filter: "Apply L2A Cloud Masks\n+ Snow/Cloud Filter"
+    FSC_TOC: "Fractional Snow Cover\n(FSC-TOC)"
+    Pass_1 -> Pass_2 -> Cloud_Filter -> FSC_TOC: {class: conn}
+  }
+}
+
+Downstream: {
+  label: ""
+  grid-columns: 2
+  style.stroke: transparent
+  style.fill: transparent
+
+  Dataset_Generation: "Dataset Generation" {
+    grid-columns: 2
+    style.fill: "#e8f5e9"
+    style.stroke: "#0d32b2"
+    style.stroke-width: 6
+    style.font-size: 90
+    *.style.font-size: 72
+    *.style.stroke-width: 5
+    Binarize: "Map LIS to Classes\n(Snow, NoSnow, Cloud)"
+    Extract: "Sliding Window\n256x256 Patches"
+    Filter: "Discard Patches\nwith 100% NoData"
+    Save: "Export Dataset\nglobal_patches (.npy)"
+    Binarize -> Extract -> Filter -> Save: {class: conn}
+  }
+
+  Deep_Learning: "Deep Learning Pipeline" {
+    grid-columns: 2
+    style.fill: "#f3e5f5"
+    style.stroke: "#0d32b2"
+    style.stroke-width: 6
+    style.font-size: 90
+    *.style.font-size: 72
+    *.style.stroke-width: 5
+    PyTorch_Dataset: "Load Patches\nMap Cloud -> NoData"
+    Train: "Train CNN Architecture\n(Loss ignore_index=255)"
+    Eval: "Model Inference\non Test Benchmark"
+    Bins: "Elevation Bins Eval\n(<3k, 3-4k, 4-5k, >5k m)"
+    PyTorch_Dataset -> Train -> Eval -> Bins: {class: conn}
+  }
+}
+
+Inputs -> Preprocessing: {style.stroke: transparent; style.stroke-width: 0}
+Preprocessing -> Downstream: {style.stroke: transparent; style.stroke-width: 0}
+
+Inputs.DEM_Raw -> Preprocessing.DEM_Preprocessing.Mosaic: {class: conn}
+Inputs.S2 -> Preprocessing.Let_It_Snow_Algorithm.Pass_1: {class: conn}
+Preprocessing.DEM_Preprocessing.Aligned_DEM -> Preprocessing.Let_It_Snow_Algorithm.Pass_2: {class: conn}
+Preprocessing.DEM_Preprocessing.Aligned_DEM -> Preprocessing.SAR_Preprocessing_SNAP.Terrain_Correction: {class: conn}
+Inputs.S1 -> Preprocessing.SAR_Preprocessing_SNAP.Pre_Process: {class: conn}
+Preprocessing.Let_It_Snow_Algorithm.FSC_TOC -> Downstream.Dataset_Generation.Binarize: {class: conn}
+Preprocessing.SAR_Preprocessing_SNAP.DB_Conversion -> Downstream.Dataset_Generation.Extract: {class: conn}
+Downstream.Dataset_Generation.Save -> Downstream.Deep_Learning.PyTorch_Dataset: {class: conn}
+Preprocessing.DEM_Preprocessing.Aligned_DEM -> Downstream.Deep_Learning.Bins: {class: conn}

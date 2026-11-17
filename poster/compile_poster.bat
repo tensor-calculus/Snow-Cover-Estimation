@@ -2,8 +2,12 @@
 setlocal
 cd /d "%~dp0"
 
-if exist "..\.venv\Scripts\python.exe" (
-    "..\.venv\Scripts\python.exe" -c "import os, fitz; src='figures/Pipeline.svg'; dst='figures/Pipeline.pdf'; os.path.exists(src) and (not os.path.exists(dst) or os.path.getmtime(src) > os.path.getmtime(dst)) and open(dst, 'wb').write(fitz.open(src).convert_to_pdf())" >nul 2>&1
+where d2 >nul 2>&1
+if %ERRORLEVEL% EQU 0 (
+    if exist "figures\Pipeline.d2" (
+        d2 "figures\Pipeline.d2" "figures\Pipeline.pdf" >nul 2>&1
+        d2 "figures\Pipeline.d2" "figures\Pipeline.svg" >nul 2>&1
+    )
 )
 
 echo Compiling Inria Poster using portable Tectonic...

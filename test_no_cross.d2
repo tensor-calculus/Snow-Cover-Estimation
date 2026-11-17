@@ -1,0 +1,94 @@
+direction: down
+
+Inputs: {
+  shape: cylinder
+  style.fill: "#edf0fd"
+  style.stroke: "#0d32b2"
+  style.font-size: 32
+  *.style.font-size: 26
+  S1: "Sentinel-1 L1 GRD (SAR)"
+  DEM_Raw: "Copernicus DEM (WGS84)"
+  S2: "Sentinel-2 L2A (Optical)"
+}
+
+Preprocessing: {
+  direction: right
+  style.stroke: transparent
+  style.fill: transparent
+
+  SAR_Preprocessing_SNAP: {
+    style.fill: "#fff3e0"
+    style.stroke: "#0d32b2"
+    style.font-size: 32
+    *.style.font-size: 26
+    Pre_Process: "Apply Orbit File -> Thermal Noise Removal\n-> Radiometric Calibration"
+    Terrain_Correction: "Range-Doppler Terrain Correction"
+    DB_Conversion: "Convert to dB (Log Scale) & Compute VV/VH Ratio"
+    Pre_Process -> Terrain_Correction -> DB_Conversion
+  }
+
+  DEM_Preprocessing: {
+    style.fill: "lightgray"
+    style.stroke: "#0d32b2"
+    style.font-size: 32
+    *.style.font-size: 26
+    Mosaic: "Stitch WGS84 Tiles"
+    Reproject: "Warp to 10m UTM"
+    Aligned_DEM: "Aligned DEM (10m UTM)"
+    Mosaic -> Reproject -> Aligned_DEM
+  }
+
+  Let_It_Snow_Algorithm: {
+    style.fill: "#e0f7fa"
+    style.stroke: "#0d32b2"
+    style.font-size: 32
+    *.style.font-size: 26
+    Pass_1: "High-Confidence Snow\n(NDSI > 0.4 & Red > 0.2)"
+    Pass_2: "Snow-Line Extension\n(NDSI > 0.15 based on elevation/adjacency)"
+    Cloud_Filter: "Apply L2A Cloud Masks\n+ Snow/Cloud disambiguation"
+    FSC_TOC: "Fractional Snow Cover (FSC-TOC)"
+    Pass_1 -> Pass_2 -> Cloud_Filter -> FSC_TOC
+  }
+}
+
+Downstream: {
+  direction: right
+  style.stroke: transparent
+  style.fill: transparent
+
+  Dataset_Generation: {
+    style.fill: "#e8f5e9"
+    style.stroke: "#0d32b2"
+    style.font-size: 32
+    *.style.font-size: 26
+    Binarize: "Map LIS to Classes\n(0=NoSnow, 1=Snow, 2=Cloud, 255=NoData)"
+    Extract: "Sliding Window 256x256"
+    Filter: "Discard Patches with 100% NoData"
+    Save: "global_patches (.npy)"
+    Binarize -> Extract -> Filter -> Save
+  }
+
+  Deep_Learning: {
+    style.fill: "#f3e5f5"
+    style.stroke: "#0d32b2"
+    style.font-size: 32
+    *.style.font-size: 26
+    PyTorch_Dataset: "Load Patches\nMap Cloud (2) to NoData (255)"
+    Train: "Train CNN\n(CrossEntropyLoss ignore_index=255)"
+    Eval: "Inference on Test Set"
+    Bins: "Aggregate accuracy by Elevation Bins\n(<3000m, 3000-4000m, etc.)"
+    PyTorch_Dataset -> Train -> Eval -> Bins
+  }
+
+  Dataset_Generation -> Deep_Learning
+}
+
+Inputs.S1 -> Preprocessing.SAR_Preprocessing_SNAP.Pre_Process
+Inputs.DEM_Raw -> Preprocessing.DEM_Preprocessing.Mosaic
+Inputs.S2 -> Preprocessing.Let_It_Snow_Algorithm.Pass_1
+
+Preprocessing.DEM_Preprocessing.Aligned_DEM -> Preprocessing.SAR_Preprocessing_SNAP.Terrain_Correction
+Preprocessing.DEM_Preprocessing.Aligned_DEM -> Preprocessing.Let_It_Snow_Algorithm.Pass_2
+
+Preprocessing.SAR_Preprocessing_SNAP.DB_Conversion -> Downstream.Dataset_Generation.Extract
+Preprocessing.Let_It_Snow_Algorithm.FSC_TOC -> Downstream.Dataset_Generation.Binarize

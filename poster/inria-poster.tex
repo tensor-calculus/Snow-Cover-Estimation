@@ -63,7 +63,7 @@
 \usepackage{smartdiagram}
 \usepackage{lipsum}
 
-\usepackage[backend=bibtex, style=numeric, autocite=superscript, defernumbers=true, natbib=true]{biblatex}
+\usepackage[backend=bibtex, style=numeric, autocite=superscript, natbib=true]{biblatex}
 \usepackage{csquotes}
 \usepackage{tikz}           % vector diagrams in native document font
 \usetikzlibrary{arrows.meta,positioning,fit,calc}
@@ -276,7 +276,7 @@ before skip=5pt, after skip=5pt}
               \item Train model on C-band and get elevation wise metrics. \ding{51}
               \item Train model on S-band and get elevation wise metrics.
               \item Prove they are complementary and device a novel approach to combine them!
-              \item Use the new model to outperform previous best-performing model of \citet{briand2026weakly}.
+              \item Use the new model to outperform previous best-performing model of Briand et al.
               \item Package everything into a GUI for demonstration.
             \end{enumerate}
             % \begin{takeaway}
@@ -317,7 +317,7 @@ before skip=5pt, after skip=5pt}
                   \item Summer training references = 6
                   \item Summer testing references = 5
                 \end{itemize}
-              \item \textbf{Optical}: Sentinel-2 satellites at $20m \times 20m$ resolution1. Labels are generated using Let-It-Snow algorithm \citet{simon2018algorithm}
+              \item \textbf{Optical}: Sentinel-2 satellites at $20m \times 20m$ resolution1. Labels are generated using Let-It-Snow algorithm
               \item \textbf{SAR C-band:} Sentinel-1 satellites at $10m \times 10m$ resolution.
               \item \textbf{DEM:} TanDEM-X satellites at $30m \times 30m$ resolution.
               \item All these satellite products are open-access on their website under Copernicus free and open data license.
@@ -390,7 +390,7 @@ before skip=5pt, after skip=5pt}
           \begin{inriablock}{The Full Pipeline}
             \begin{figure}[!htbp]
               \centering
-              \includegraphics[width=0.6\linewidth,keepaspectratio]{figures/Pipeline.pdf}
+              \includegraphics[width=0.98\linewidth,keepaspectratio]{figures/Pipeline.pdf}
               \vspace{0.2em}
               % \caption{End-to-end multi-sensor preprocessing, patch extraction, and CNN training workflow.}
               % \label{fig:pipeline}
@@ -412,8 +412,9 @@ before skip=5pt, after skip=5pt}
               %   \item \textbf{Note:} This is a nice addition to the poster template.
               % \end{itemize}
                 \begin{table}[!htbp]
-              \caption{Model metrics along with \citet{briand2026weakly}}
+              \caption{Model metrics}
               \label{tab:results}
+              \vspace{-1.4em}
               \centering
               \renewcommand{\arraystretch}{0.92}
               \resizebox{\textwidth}{!}{%
@@ -422,13 +423,13 @@ before skip=5pt, after skip=5pt}
                 Scenario \& Method & Channels & $\text{F1}_{\text{Snow}}$ ($\uparrow$) & $\text{IoU}_{\text{Snow}}$ ($\uparrow$) & Macro F1 ($\uparrow$) & Overall F1 ($\uparrow$) \\
                 \midrule
                 \multicolumn{6}{l}{\emph{A. Same-Basin Temporal Generalization}} \\
-                \citet{briand2026weakly} & Set~B (4-ch) & 84.70\% & 0.7346 & 80.30\% & 81.50\% \\
+                Briand et al. & Set~B (4-ch) & 84.70\% & 0.7346 & 80.30\% & 81.50\% \\
                 Model~1: Raw C-Band (Baseline) & Set~A (2-ch) & 56.84\% & 0.3970 & 77.02\% & 94.80\% \\
                 Model~2: C-Band + Summer MLE & Set~B (4-ch) & 67.10\% & 0.5049 & 82.58\% & 96.25\% \\
                 Model~3: C-Band + MLE + DEM & Set~B+DEM (6-ch) & \textbf{69.27\%} & \textbf{0.5299} & \textbf{83.68\%} & \textbf{96.48\%} \\
                 \midrule
                 \multicolumn{6}{l}{\emph{B. Unseen-Basin Spatial Transfer}} \\
-                \citet{briand2026weakly} & Set~B (4-ch) & 74.40\% & 0.5924 & 71.05\% & 71.30\% \\
+                Briand et al. & Set~B (4-ch) & 74.40\% & 0.5924 & 71.05\% & 71.30\% \\
                 Model~1: Raw C-Band (Baseline) & Set~A (2-ch) & 43.34\% & 0.2767 & 68.18\% & 87.08\% \\
                 Model~2: C-Band + Summer MLE & Set~B (4-ch) & 46.46\% & 0.3026 & 70.79\% & 89.27\% \\
                 Model~3: C-Band + MLE + DEM & Set~B+DEM (6-ch) & \textbf{50.42\%} & \textbf{0.3371} & \textbf{72.82\%} & \textbf{89.83\%} \\
@@ -441,6 +442,7 @@ before skip=5pt, after skip=5pt}
             \begin{table}[!htbp]
               \caption{Elevation wise metrics for unseen test patch}
               \label{tab:elevation_results}
+              \vspace{-1.4em}
               \centering
               \renewcommand{\arraystretch}{0.92}
               \resizebox{\textwidth}{!}{%
@@ -522,11 +524,11 @@ before skip=5pt, after skip=5pt}
           %   \end{itemize}
           % \end{inriafinalblock}
           % In general, it does not make sense to include a bibliography, but here you have it in case you need it.
-          \begin{plainblock}{\small References}
-            %%\renewcommand*{\bibfont}{\footnotesize}
-            \setlength{\bibitemsep}{0.29em}
-            \printbibliography[notcategory=thispapercat]
-          \end{plainblock}
+          % \begin{plainblock}{\small References}
+          %   %%\renewcommand*{\bibfont}{\footnotesize}
+          %   \setlength{\bibitemsep}{0.29em}
+          %   \printbibliography[notcategory=thispapercat]
+          % \end{plainblock}
         \end{column}
       \end{columns}
     \end{column}
